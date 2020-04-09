@@ -220,6 +220,8 @@ void generateAndCompareExpectedOutput(
 #else
 	const std::wstring expectedOutputFileName = L"output_unix.txt";
 #endif
+	const TextAccess* outputTextAccess = output.get();
+	const std::string outputString = outputTextAccess->getText();
 	const FilePath expectedOutputFilePath =
 		getOutputDirectoryPath(projectName).concatenate(expectedOutputFileName);
 	if (updateExpectedOutput || !expectedOutputFilePath.exists())
@@ -449,6 +451,40 @@ TEST_CASE("source group cxx cdb generates expected output")
 
 	applicationSettings->setHeaderSearchPaths(storedHeaderSearchPaths);
 	applicationSettings->setFrameworkSearchPaths(storedFrameworkSearchPaths);
+}
+
+TEST_CASE("source group cxx cdb generates expected output given a Windows-formatted compile_commands.json")
+{
+    const std::wstring projectName = L"cxx_cdb_windows";
+
+    ProjectSettings projectSettings;
+    projectSettings.setProjectFilePath(L"non_existent_project", getInputDirectoryPath(projectName));
+
+    std::shared_ptr<SourceGroupSettingsCxxCdb> sourceGroupSettings =
+            std::make_shared<SourceGroupSettingsCxxCdb>("fake_id", &projectSettings);
+    sourceGroupSettings->setIndexedHeaderPaths({FilePath(L"test/indexed/header/path")});
+    sourceGroupSettings->setCompilationDatabasePath(
+            getInputDirectoryPath(projectName).concatenate(L"compile_commands.json"));
+    sourceGroupSettings->setExcludeFilterStrings({L"**/excluded/**"});
+    sourceGroupSettings->setHeaderSearchPaths(
+            {getInputDirectoryPath(projectName).concatenate(L"header_search/local")});
+    sourceGroupSettings->setFrameworkSearchPaths(
+            {getInputDirectoryPath(projectName).concatenate(L"framework_search/local")});
+    sourceGroupSettings->setCompilerFlags({L"-local-flag"});
+
+    std::shared_ptr<ApplicationSettings> applicationSettings = ApplicationSettings::getInstance();
+
+    std::vector<FilePath> storedHeaderSearchPaths = applicationSettings->getHeaderSearchPaths();
+    std::vector<FilePath> storedFrameworkSearchPaths = applicationSettings->getFrameworkSearchPaths();
+
+    applicationSettings->setHeaderSearchPaths({FilePath(L"test/header/search/path")});
+    applicationSettings->setFrameworkSearchPaths({FilePath(L"test/framework/search/path")});
+
+    generateAndCompareExpectedOutput(
+            projectName, std::make_shared<SourceGroupCxxCdb>(sourceGroupSettings));
+
+    applicationSettings->setHeaderSearchPaths(storedHeaderSearchPaths);
+    applicationSettings->setFrameworkSearchPaths(storedFrameworkSearchPaths);
 }
 
 #endif	  // BUILD_CXX_LANGUAGE_PACKAGE
