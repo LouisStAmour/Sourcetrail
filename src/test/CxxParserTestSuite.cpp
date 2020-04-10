@@ -767,8 +767,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-	"cxx parser finds non type template parameter definition that depends on type template "
-	"parameter of template class")
+	"cxx parser finds non type template parameter definition that depends on type template parameter of template class")
 {
 	std::shared_ptr<TestStorage> client = parseCode(
 		"template <typename T1, T1& T2>\n"
@@ -800,8 +799,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-	"cxx parser finds non type template parameter definition that depends on type template "
-	"parameter of template template parameter")
+	"cxx parser finds non type template parameter definition that depends on type template parameter of template template parameter")
 {
 	std::shared_ptr<TestStorage> client = parseCode(
 		"template <template<typename T, T R>typename S>\n"
