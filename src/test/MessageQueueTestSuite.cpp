@@ -110,7 +110,7 @@ private:
 
 void waitForThread()
 {
-	static const int THREAD_WAIT_TIME_MS = 50;
+	static const int THREAD_WAIT_TIME_MS = 20;
 	do
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(THREAD_WAIT_TIME_MS));
@@ -120,8 +120,6 @@ void waitForThread()
 
 TEST_CASE("message loop starts and stops")
 {
-    MessageQueue::getInstance().reset();
-
 	REQUIRE(!MessageQueue::getInstance()->loopIsRunning());
 
 	MessageQueue::getInstance()->startMessageLoopThreaded();
@@ -139,8 +137,6 @@ TEST_CASE("message loop starts and stops")
 
 TEST_CASE("registered listener receives messages")
 {
-    MessageQueue::getInstance().reset();
-
 	MessageQueue::getInstance()->startMessageLoopThreaded();
 
 	TestMessageListener listener;
@@ -160,8 +156,6 @@ TEST_CASE("registered listener receives messages")
 
 TEST_CASE("message dispatching within message handling")
 {
-    MessageQueue::getInstance().reset();
-
 	MessageQueue::getInstance()->startMessageLoopThreaded();
 
 	TestMessageListener listener;
@@ -179,8 +173,6 @@ TEST_CASE("message dispatching within message handling")
 
 TEST_CASE("listener registration within message handling")
 {
-    MessageQueue::getInstance().reset();
-
 	MessageQueue::getInstance()->startMessageLoopThreaded();
 
 	Test3MessageListener listener;
@@ -201,8 +193,6 @@ TEST_CASE("listener registration within message handling")
 
 TEST_CASE("listener unregistration within message handling")
 {
-    MessageQueue::getInstance().reset();
-
 	MessageQueue::getInstance()->startMessageLoopThreaded();
 
 	Test4MessageListener listener;
@@ -228,8 +218,6 @@ TEST_CASE("listener unregistration within message handling")
 
 TEST_CASE("listener registration to front and back within message handling")
 {
-    MessageQueue::getInstance().reset();
-
 	MessageQueue::getInstance()->startMessageLoopThreaded();
 
 	Test5MessageListener listener;
