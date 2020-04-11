@@ -6,7 +6,7 @@
 #include <map>
 #include <string>
 
-#include "DefinitionKind.h"
+#include "../DefinitionKind.h"
 #include "Edge.h"
 #include "NameHierarchy.h"
 #include "NodeType.h"

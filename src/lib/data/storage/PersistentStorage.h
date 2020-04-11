@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include "FullTextSearchIndex.h"
+#include "../fulltextsearch/FullTextSearchIndex.h"
 #include "HierarchyCache.h"
 #include "SearchIndex.h"
 #include "SqliteBookmarkStorage.h"

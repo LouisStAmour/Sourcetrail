@@ -5,7 +5,7 @@
 #include <set>
 #include <vector>
 
-#include "LanguageType.h"
+#include "../../lib/settings/LanguageType.h"
 #include "SourceGroupStatusType.h"
 #include "SourceGroupType.h"
 
