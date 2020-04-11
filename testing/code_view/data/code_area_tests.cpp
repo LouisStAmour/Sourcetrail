@@ -4,20 +4,19 @@
 
 namespace CODE_AREA_TESTS
 {
-
 // TEST: hover
 // START ----------------------------------------------------------------------
 
-namespace hover // <- ACTION 1: hover namespace
+namespace hover	   // <- ACTION 1: hover namespace
 {
-	void function(size_t number, bool flag) // <- ACTION 2: function
+void function(size_t number, bool flag)	   // <- ACTION 2: function
+{
+	if (flag)
 	{
-		if (flag)
-		{
-			number += 10; // <- ACTION 3: hover number
-		}
+		number += 10;	 // <- ACTION 3: hover number
 	}
 }
+}	 // namespace hover
 
 // RESULTS 1:
 // - namespace name gets border
@@ -37,11 +36,10 @@ namespace hover // <- ACTION 1: hover namespace
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: Activating symbol
 // START ----------------------------------------------------------------------
 
-void some_function() // <- ACTION: click on function
+void some_function()	// <- ACTION: click on function
 {
 }
 
@@ -52,7 +50,6 @@ void some_function() // <- ACTION: click on function
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: Activating reference
 // START ----------------------------------------------------------------------
 
@@ -60,7 +57,7 @@ void func() {}
 
 void reference_test()
 {
-	func(); // <- ACTION: click on function call
+	func();	   // <- ACTION: click on function call
 }
 
 // RESULTS:
@@ -71,14 +68,13 @@ void reference_test()
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: Activating qualifier
 // START ----------------------------------------------------------------------
 
 namespace qualifier
 {
-	void func() {}
-}
+void func() {}
+}	 // namespace qualifier
 
 void qualifier_test()
 {
@@ -93,13 +89,13 @@ void qualifier_test()
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: members have implicit reference locations at type definition
 // START ----------------------------------------------------------------------
 class TestType
-{};
+{
+};
 
-class Sample // <- ACTION 1: click class name
+class Sample	// <- ACTION 1: click class name
 {
 public:
 	TestType m_type;
@@ -118,7 +114,6 @@ Sample s;
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: clicking on overriden method activates it immediately
 // START ----------------------------------------------------------------------
 class Base
@@ -126,10 +121,9 @@ class Base
 	virtual void foo();
 };
 
-class Override
-	: public Base
+class Override: public Base
 {
-	void foo() override; // <- ACTION: click on foo()
+	void foo() override;	// <- ACTION: click on foo()
 };
 
 // RESULT: Override::foo() is activated
@@ -140,10 +134,9 @@ class Override
 // TEST: clicking on macro usage shows list of symbols referenced at location
 // START ----------------------------------------------------------------------
 
-#define POW(__number__, __power__) \
-	std::pow(__number__, __power__)
+#define POW(__number__, __power__) std::pow(__number__, __power__)
 
-int a = POW(42, 2); // <- ACTION 1: click on POW
+int a = POW(42, 2);	   // <- ACTION 1: click on POW
 
 // RESULT 1: shows list:
 // POW
@@ -157,12 +150,13 @@ int a = POW(42, 2); // <- ACTION 1: click on POW
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: function tooltip - BROKEN
 // START ----------------------------------------------------------------------
 
-std::vector<std::string> very_long_function_name_with_three_parameters( // <- ACTION 1: hover function
-	const std::vector<std::string>& strings, size_t number, bool flag)
+std::vector<std::string> very_long_function_name_with_three_parameters(	   // <- ACTION 1: hover function
+	const std::vector<std::string>& strings,
+	size_t number,
+	bool flag)
 {
 	return strings;
 }
@@ -187,13 +181,12 @@ std::vector<std::string> very_long_function_name_with_three_parameters( // <- AC
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: auto tooltip - BROKEN
 // START ----------------------------------------------------------------------
 
 void auto_function(const std::vector<std::string>& strings)
 {
-	auto it = strings.begin(); // <- ACTION 1: hover auto
+	auto it = strings.begin();	  // <- ACTION 1: hover auto
 }
 
 // RESULT 1: Tooltip shows underlying type
@@ -201,24 +194,23 @@ void auto_function(const std::vector<std::string>& strings)
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: typedef tooltip - BROKEN
 // START ----------------------------------------------------------------------
 
 typedef unsigned int uint;
 
-uint b = 12; // <- ACTION 1: hover uint
+uint b = 12;	// <- ACTION 1: hover uint
 
 // RESULT 1: Tooltip shows underlying type
 
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: horizontal panning
 // START ----------------------------------------------------------------------
 
-void very_long_function_name_with_three_parameters_that_is_so_long_it_doesnt_fit_on_the_screen(const std::vector<std::string>& strings, size_t number, bool flag);
+void very_long_function_name_with_three_parameters_that_is_so_long_it_doesnt_fit_on_the_screen(
+	const std::vector<std::string>& strings, size_t number, bool flag);
 
 // ACTION 1: Hold SHIFT and drag code left and right
 
@@ -231,16 +223,12 @@ void very_long_function_name_with_three_parameters_that_is_so_long_it_doesnt_fit
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: copy & paste
 // START ----------------------------------------------------------------------
 
-void copy_function(
-	const std::vector<std::string>& strings,
-	size_t number,
-	bool flag)
+void copy_function(const std::vector<std::string>& strings, size_t number, bool flag)
 {
-	for (auto str : strings)
+	for (auto str: strings)
 	{
 		number++;
 	}
@@ -253,7 +241,6 @@ void copy_function(
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: copy file path
 // START ----------------------------------------------------------------------
 
@@ -262,7 +249,6 @@ void copy_function(
 // RESULT: Full path to the file is pasted
 
 // END ------------------------------------------------------------------------
-
 
 
 // TEST: open containing folder
@@ -274,4 +260,4 @@ void copy_function(
 
 // END ------------------------------------------------------------------------
 
-}
+}	 // namespace CODE_AREA_TESTS

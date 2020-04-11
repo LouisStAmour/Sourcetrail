@@ -2,27 +2,27 @@
 
 #include "io.h"
 
-HumanPlayer::HumanPlayer( Field::Token token, const char* name  )
-	: Player( token, name ) {
-}
+HumanPlayer::HumanPlayer(Field::Token token, const char* name): Player(token, name) {}
 
-HumanPlayer::~HumanPlayer() {
-}
+HumanPlayer::~HumanPlayer() {}
 
-Field::Move HumanPlayer::Turn( const Field& field ) const {
+Field::Move HumanPlayer::Turn(const Field& field) const
+{
 	Field::Move move;
 	io::stringOut(name_);
 	io::stringOut("\n");
 
-	do {
+	do
+	{
 		move = Input();
 		move.row -= 1;
 		move.col -= 1;
-	} while ( !Check( field, move ) );
+	} while (!Check(field, move));
 	return move;
 }
 
-Field::Move HumanPlayer::Input() const {
+Field::Move HumanPlayer::Input() const
+{
 	Field::Move move;
 	move.row = -1;
 	move.col = -1;
@@ -37,11 +37,15 @@ Field::Move HumanPlayer::Input() const {
 	return move;
 }
 
-bool HumanPlayer::Check( const Field& field, const Field::Move& move ) const {
-	if ( !field.InRange( move ) ) {
+bool HumanPlayer::Check(const Field& field, const Field::Move& move) const
+{
+	if (!field.InRange(move))
+	{
 		io::stringOut("Wrong input!\n");
 		return false;
-	} else if ( !field.IsEmpty( move ) ) {
+	}
+	else if (!field.IsEmpty(move))
+	{
 		io::stringOut("Is occupied!\n");
 		return false;
 	}

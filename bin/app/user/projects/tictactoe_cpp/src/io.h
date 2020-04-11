@@ -1,13 +1,13 @@
 #ifndef _IO_
 #define _IO_
 
-namespace io {
+namespace io
+{
+int numberIn();
+void numberOut(int num);
 
-	int numberIn();
-	void numberOut(int num);
+void stringOut(const char* str);
 
-	void stringOut(const char* str);
+}	 // namespace io
 
-}
-
-#endif // _IO_
+#endif	  // _IO_

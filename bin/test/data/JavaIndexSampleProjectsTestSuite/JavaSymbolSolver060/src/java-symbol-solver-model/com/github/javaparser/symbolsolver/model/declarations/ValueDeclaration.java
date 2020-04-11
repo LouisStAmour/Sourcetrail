@@ -24,10 +24,8 @@ import com.github.javaparser.symbolsolver.model.typesystem.Type;
  * @author Federico Tomassetti
  */
 public interface ValueDeclaration extends Declaration {
-
-    /**
-     * Type of the declaration.
-     */
-    Type getType();
-
+	/**
+	 * Type of the declaration.
+	 */
+	Type getType();
 }

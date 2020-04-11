@@ -21,7 +21,6 @@ import com.github.javaparser.symbolsolver.model.declarations.ReferenceTypeDeclar
 import com.github.javaparser.symbolsolver.model.declarations.TypeParameterDeclaration;
 import com.github.javaparser.symbolsolver.model.resolution.TypeSolver;
 import com.github.javaparser.symbolsolver.model.typesystem.*;
-
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -33,86 +32,136 @@ import java.util.List;
 /**
  * @author Federico Tomassetti
  */
-public class ReflectionFactory {
+public class ReflectionFactory
+{
+	public static ReferenceTypeDeclaration typeDeclarationFor(Class<?> clazz, TypeSolver typeSolver)
+	{
+		if (clazz.isArray())
+		{
+			throw new IllegalArgumentException("No type declaration available for an Array");
+		}
+		else if (clazz.isPrimitive())
+		{
+			throw new IllegalArgumentException();
+		}
+		else if (clazz.isInterface())
+		{
+			return new ReflectionInterfaceDeclaration(clazz, typeSolver);
+		}
+		else if (clazz.isEnum())
+		{
+			return new ReflectionEnumDeclaration(clazz, typeSolver);
+		}
+		else
+		{
+			return new ReflectionClassDeclaration(clazz, typeSolver);
+		}
+	}
 
-    public static ReferenceTypeDeclaration typeDeclarationFor(Class<?> clazz, TypeSolver typeSolver) {
-        if (clazz.isArray()) {
-            throw new IllegalArgumentException("No type declaration available for an Array");
-        } else if (clazz.isPrimitive()) {
-            throw new IllegalArgumentException();
-        } else if (clazz.isInterface()) {
-            return new ReflectionInterfaceDeclaration(clazz, typeSolver);
-        } else if (clazz.isEnum()) {
-            return new ReflectionEnumDeclaration(clazz, typeSolver);
-        } else {
-            return new ReflectionClassDeclaration(clazz, typeSolver);
-        }
-    }
+	public static Type typeUsageFor(java.lang.reflect.Type type, TypeSolver typeSolver)
+	{
+		if (type instanceof java.lang.reflect.TypeVariable)
+		{
+			java.lang.reflect.TypeVariable<?> tv = (java.lang.reflect.TypeVariable<?>)type;
+			boolean declaredOnClass = tv.getGenericDeclaration() instanceof java.lang.reflect.Type;
+			TypeParameterDeclaration typeParameter = new ReflectionTypeParameter(
+				tv, declaredOnClass, typeSolver);
+			return new com.github.javaparser.symbolsolver.model.typesystem.TypeVariable(typeParameter);
+		}
+		else if (type instanceof ParameterizedType)
+		{
+			ParameterizedType pt = (ParameterizedType)type;
+			ReferenceType rawType = typeUsageFor(pt.getRawType(), typeSolver).asReferenceType();
+			List<java.lang.reflect.Type> actualTypes = new ArrayList<>();
+			actualTypes.addAll(Arrays.asList(pt.getActualTypeArguments()));
+			// we consume the actual types
+			rawType = rawType
+						  .transformTypeParameters(
+							  tp -> typeUsageFor(actualTypes.remove(0), typeSolver))
+						  .asReferenceType();
+			return rawType;
+		}
+		else if (type instanceof Class)
+		{
+			Class<?> c = (Class<?>)type;
+			if (c.isPrimitive())
+			{
+				if (c.getName().equals(Void.TYPE.getName()))
+				{
+					return VoidType.INSTANCE;
+				}
+				else
+				{
+					return PrimitiveType.byName(c.getName());
+				}
+			}
+			else if (c.isArray())
+			{
+				return new ArrayType(typeUsageFor(c.getComponentType(), typeSolver));
+			}
+			else
+			{
+				return new ReferenceTypeImpl(typeDeclarationFor(c, typeSolver), typeSolver);
+			}
+		}
+		else if (type instanceof GenericArrayType)
+		{
+			GenericArrayType genericArrayType = (GenericArrayType)type;
+			return new ArrayType(typeUsageFor(genericArrayType.getGenericComponentType(), typeSolver));
+		}
+		else if (type instanceof WildcardType)
+		{
+			WildcardType wildcardType = (WildcardType)type;
+			if (wildcardType.getLowerBounds().length > 0 && wildcardType.getUpperBounds().length > 0)
+			{
+				if (wildcardType.getUpperBounds().length == 1 &&
+					wildcardType.getUpperBounds()[0].getTypeName().equals("java.lang.Object"))
+				{
+					// ok, it does not matter
+				}
+			}
+			if (wildcardType.getLowerBounds().length > 0)
+			{
+				if (wildcardType.getLowerBounds().length > 1)
+				{
+					throw new UnsupportedOperationException();
+				}
+				return Wildcard.superBound(typeUsageFor(wildcardType.getLowerBounds()[0], typeSolver));
+			}
+			if (wildcardType.getUpperBounds().length > 0)
+			{
+				if (wildcardType.getUpperBounds().length > 1)
+				{
+					throw new UnsupportedOperationException();
+				}
+				return Wildcard.extendsBound(
+					typeUsageFor(wildcardType.getUpperBounds()[0], typeSolver));
+			}
+			return Wildcard.UNBOUNDED;
+		}
+		else
+		{
+			throw new UnsupportedOperationException(type.getClass().getCanonicalName() + " " + type);
+		}
+	}
 
-    public static Type typeUsageFor(java.lang.reflect.Type type, TypeSolver typeSolver) {
-        if (type instanceof java.lang.reflect.TypeVariable) {
-            java.lang.reflect.TypeVariable<?> tv = (java.lang.reflect.TypeVariable<?>) type;
-            boolean declaredOnClass = tv.getGenericDeclaration() instanceof java.lang.reflect.Type;
-            TypeParameterDeclaration typeParameter = new ReflectionTypeParameter(tv, declaredOnClass, typeSolver);
-            return new com.github.javaparser.symbolsolver.model.typesystem.TypeVariable(typeParameter);
-        } else if (type instanceof ParameterizedType) {
-            ParameterizedType pt = (ParameterizedType) type;
-            ReferenceType rawType = typeUsageFor(pt.getRawType(), typeSolver).asReferenceType();
-            List<java.lang.reflect.Type> actualTypes = new ArrayList<>();
-            actualTypes.addAll(Arrays.asList(pt.getActualTypeArguments()));
-            // we consume the actual types
-            rawType = rawType.transformTypeParameters(tp -> typeUsageFor(actualTypes.remove(0), typeSolver)).asReferenceType();
-            return rawType;
-        } else if (type instanceof Class) {
-            Class<?> c = (Class<?>) type;
-            if (c.isPrimitive()) {
-                if (c.getName().equals(Void.TYPE.getName())) {
-                    return VoidType.INSTANCE;
-                } else {
-                    return PrimitiveType.byName(c.getName());
-                }
-            } else if (c.isArray()) {
-                return new ArrayType(typeUsageFor(c.getComponentType(), typeSolver));
-            } else {
-                return new ReferenceTypeImpl(typeDeclarationFor(c, typeSolver), typeSolver);
-            }
-        } else if (type instanceof GenericArrayType) {
-            GenericArrayType genericArrayType = (GenericArrayType) type;
-            return new ArrayType(typeUsageFor(genericArrayType.getGenericComponentType(), typeSolver));
-        } else if (type instanceof WildcardType) {
-            WildcardType wildcardType = (WildcardType) type;
-            if (wildcardType.getLowerBounds().length > 0 && wildcardType.getUpperBounds().length > 0) {
-                if (wildcardType.getUpperBounds().length == 1 && wildcardType.getUpperBounds()[0].getTypeName().equals("java.lang.Object")) {
-                    // ok, it does not matter
-                }
-            }
-            if (wildcardType.getLowerBounds().length > 0) {
-                if (wildcardType.getLowerBounds().length > 1) {
-                    throw new UnsupportedOperationException();
-                }
-                return Wildcard.superBound(typeUsageFor(wildcardType.getLowerBounds()[0], typeSolver));
-            }
-            if (wildcardType.getUpperBounds().length > 0) {
-                if (wildcardType.getUpperBounds().length > 1) {
-                    throw new UnsupportedOperationException();
-                }
-                return Wildcard.extendsBound(typeUsageFor(wildcardType.getUpperBounds()[0], typeSolver));
-            }
-            return Wildcard.UNBOUNDED;
-        } else {
-            throw new UnsupportedOperationException(type.getClass().getCanonicalName() + " " + type);
-        }
-    }
-
-    static AccessLevel modifiersToAccessLevel(final int modifiers) {
-        if (Modifier.isPublic(modifiers)) {
-            return AccessLevel.PUBLIC;
-        } else if (Modifier.isProtected(modifiers)) {
-            return AccessLevel.PROTECTED;
-        } else if (Modifier.isPrivate(modifiers)) {
-            return AccessLevel.PRIVATE;
-        } else {
-            return AccessLevel.PACKAGE_PROTECTED;
-        }
-    }
+	static AccessLevel modifiersToAccessLevel(final int modifiers)
+	{
+		if (Modifier.isPublic(modifiers))
+		{
+			return AccessLevel.PUBLIC;
+		}
+		else if (Modifier.isProtected(modifiers))
+		{
+			return AccessLevel.PROTECTED;
+		}
+		else if (Modifier.isPrivate(modifiers))
+		{
+			return AccessLevel.PRIVATE;
+		}
+		else
+		{
+			return AccessLevel.PACKAGE_PROTECTED;
+		}
+	}
 }

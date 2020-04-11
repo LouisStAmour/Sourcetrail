@@ -23,13 +23,14 @@ import com.github.javaparser.symbolsolver.resolution.SymbolDeclarator;
 /**
  * @author Federico Tomassetti
  */
-public abstract class AbstractSymbolDeclarator<N extends Node> implements SymbolDeclarator {
+public abstract class AbstractSymbolDeclarator<N extends Node> implements SymbolDeclarator
+{
+	protected N wrappedNode;
+	protected TypeSolver typeSolver;
 
-    protected N wrappedNode;
-    protected TypeSolver typeSolver;
-
-    public AbstractSymbolDeclarator(N wrappedNode, TypeSolver typeSolver) {
-        this.wrappedNode = wrappedNode;
-        this.typeSolver = typeSolver;
-    }
+	public AbstractSymbolDeclarator(N wrappedNode, TypeSolver typeSolver)
+	{
+		this.wrappedNode = wrappedNode;
+		this.typeSolver = typeSolver;
+	}
 }

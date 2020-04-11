@@ -36,7 +36,9 @@ class click_me_to_continue
 	}
 };
 
-class NothingToSeeHere: public BoringClass, public click_me_to_continue
+class NothingToSeeHere
+	: public BoringClass
+	, public click_me_to_continue
 {
 };
 
@@ -45,5 +47,4 @@ class JustMoveOn
 };
 
 
-#endif // GRAPH_TUTORIAL_6_H
-
+#endif	  // GRAPH_TUTORIAL_6_H

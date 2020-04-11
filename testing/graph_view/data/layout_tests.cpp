@@ -5,11 +5,9 @@
 // TEST: call layout
 // START ----------------------------------------------------------------------
 
-void right_function()
-{
-}
+void right_function() {}
 
-void middle_function() // <- ACTION 1: activate function
+void middle_function()	  // <- ACTION 1: activate function
 {
 	right_function();
 }
@@ -24,19 +22,21 @@ void left_function()
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: inheritance layout
 // START ----------------------------------------------------------------------
 
-class Top {};
+class Top
+{
+};
 
-class Middle // <- ACTION 1: activate class
+class Middle	// <- ACTION 1: activate class
 	: public Top
-{};
+{
+};
 
-class Bottom
-	: public Middle
-{};
+class Bottom: public Middle
+{
+};
 
 // RESULT 1: layout correctly displayed vertically:
 // - Top
@@ -46,24 +46,26 @@ class Bottom
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: override layout
 // START ----------------------------------------------------------------------
 
-class AbstractBase {
+class AbstractBase
+{
 protected:
 	virtual void foo() = 0;
 	virtual void bar() = 0;
 };
 
-class Base : public AbstractBase {
+class Base: public AbstractBase
+{
 protected:
-	void foo() override {} // <- ACTION 1: activate
+	void foo() override {}	  // <- ACTION 1: activate
 };
 
-class Derived : public Base {
+class Derived: public Base
+{
 protected:
-	void bar() override // <- ACTION 2: activate
+	void bar() override	   // <- ACTION 2: activate
 	{
 		foo();
 	}
@@ -84,15 +86,14 @@ protected:
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: enum layout
 // START ----------------------------------------------------------------------
 
-enum Category // <- ACTION 1: activate
+enum Category	 // <- ACTION 1: activate
 {
 	ONE,
 	TWO,
-	THREE // <- ACTION 2: activate
+	THREE	 // <- ACTION 2: activate
 };
 
 // RESULTS 1:
@@ -105,14 +106,17 @@ enum Category // <- ACTION 1: activate
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: function children layout
 // START ----------------------------------------------------------------------
 
-void foobar() // <- ACTION 1: activate
+void foobar()	 // <- ACTION 1: activate
 {
-	struct A {};
-	struct B {}; // <- ACTION 2: activate
+	struct A
+	{
+	};
+	struct B
+	{
+	};	  // <- ACTION 2: activate
 }
 
 // RESULTS 1:
@@ -125,16 +129,15 @@ void foobar() // <- ACTION 1: activate
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: implicit classes
 // START ----------------------------------------------------------------------
 
-template<typename T>
-class BaseType // <- ACTION 1: activate
+template <typename T>
+class BaseType	  // <- ACTION 1: activate
 {
 };
 
-void implicit_type_creator() // <- ACTION 2: activate
+void implicit_type_creator()	// <- ACTION 2: activate
 {
 	BaseType<int> a;
 	BaseType<bool> b;
@@ -147,18 +150,19 @@ void implicit_type_creator() // <- ACTION 2: activate
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: implicit methods
 // START ----------------------------------------------------------------------
 
-class AnotherType // <- ACTION 1: activate
+class AnotherType	 // <- ACTION 1: activate
 {
 public:
-	template<typename T>
-	void foo(T t) {} // <- ACTION 2: activate
+	template <typename T>
+	void foo(T t)
+	{
+	}	 // <- ACTION 2: activate
 };
 
-void implicit_method_creator() // <- ACTION 3: activate
+void implicit_method_creator()	  // <- ACTION 3: activate
 {
 	AnotherType a;
 	a.foo(1);
@@ -174,18 +178,17 @@ void implicit_method_creator() // <- ACTION 3: activate
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: namespace layout
 // START ----------------------------------------------------------------------
 
-namespace layout // <- ACTION: activate
+namespace layout	// <- ACTION: activate
 {
-	int a;
+int a;
 
-	class B;
+class B;
 
-	typedef int C;
-}
+typedef int C;
+}	 // namespace layout
 
 // RESULTS:
 // - namespace displayed as group
@@ -193,7 +196,6 @@ namespace layout // <- ACTION: activate
 // - includes a letter index
 
 // END ------------------------------------------------------------------------
-
 
 
 // TEST: file contents
@@ -206,4 +208,3 @@ namespace layout // <- ACTION: activate
 // - file node can be collapsed
 
 // END ------------------------------------------------------------------------
-

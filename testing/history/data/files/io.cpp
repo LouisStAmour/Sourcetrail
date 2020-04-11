@@ -4,20 +4,23 @@
 #include <sstream>
 #include <string>
 
-int io::numberIn() {
+int io::numberIn()
+{
 	std::string input;
-	getline( std::cin, input );
-	std::stringstream stream( input );
+	getline(std::cin, input);
+	std::stringstream stream(input);
 
 	int number;
 	stream >> number;
 	return number;
 }
 
-void io::numberOut(int num) {
+void io::numberOut(int num)
+{
 	std::cout << num;
 }
 
-void io::stringOut(const char* str) {
+void io::stringOut(const char* str)
+{
 	std::cout << str;
 }

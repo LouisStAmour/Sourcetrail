@@ -1,33 +1,40 @@
-class Player {
+class Player
+{
 public:
-  void Do() {}
+	void Do() {}
 };
 
-class Base {};
+class Base
+{
+};
 
-class Game : public Base {
+class Game: public Base
+{
 public:
-  Game() {
-    Init();
-  }
+	Game()
+	{
+		Init();
+	}
 
-  void Init() {}
+	void Init() {}
 
-  void Run() {
-    player.Do();
-  }
+	void Run()
+	{
+		player.Do();
+	}
 
 private:
-  Player player;
+	Player player;
 };
 
 Game* game;
 
-int main() {
-  game = new Game();
+int main()
+{
+	game = new Game();
 
-  game->Run();
+	game->Run();
 
-  delete game;
-  return 0;
+	delete game;
+	return 0;
 }

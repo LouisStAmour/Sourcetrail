@@ -23,29 +23,44 @@ import com.github.javaparser.symbolsolver.model.declarations.MethodDeclaration;
 import com.github.javaparser.symbolsolver.model.methods.MethodUsage;
 import com.github.javaparser.symbolsolver.model.typesystem.Type;
 import com.github.javaparser.symbolsolver.reflectionmodel.ReflectionMethodDeclaration;
-
 import java.util.List;
 
 /**
  * @author Federico Tomassetti
  */
-class ContextHelper {
+class ContextHelper
+{
+	private ContextHelper()
+	{
+		// prevent instantiation
+	}
 
-    private ContextHelper() {
-        // prevent instantiation
-    }
-
-    static MethodUsage resolveTypeVariables(Context context, MethodDeclaration methodDeclaration, List<Type> parameterTypes) {
-        if (methodDeclaration instanceof JavaParserMethodDeclaration) {
-            return ((JavaParserMethodDeclaration) methodDeclaration).resolveTypeVariables(context, parameterTypes);
-        } else if (methodDeclaration instanceof JavassistMethodDeclaration) {
-            return ((JavassistMethodDeclaration) methodDeclaration).resolveTypeVariables(context, parameterTypes);
-        } else if (methodDeclaration instanceof JavaParserEnumDeclaration.ValuesMethod) {
-            return ((JavaParserEnumDeclaration.ValuesMethod) methodDeclaration).resolveTypeVariables(context, parameterTypes);
-        } else if (methodDeclaration instanceof ReflectionMethodDeclaration) {
-            return ((ReflectionMethodDeclaration) methodDeclaration).resolveTypeVariables(context, parameterTypes);
-        } else {
-            throw new UnsupportedOperationException();
-        }
-    }
+	static MethodUsage resolveTypeVariables(
+		Context context, MethodDeclaration methodDeclaration, List<Type> parameterTypes)
+	{
+		if (methodDeclaration instanceof JavaParserMethodDeclaration)
+		{
+			return ((JavaParserMethodDeclaration)methodDeclaration)
+				.resolveTypeVariables(context, parameterTypes);
+		}
+		else if (methodDeclaration instanceof JavassistMethodDeclaration)
+		{
+			return ((JavassistMethodDeclaration)methodDeclaration)
+				.resolveTypeVariables(context, parameterTypes);
+		}
+		else if (methodDeclaration instanceof JavaParserEnumDeclaration.ValuesMethod)
+		{
+			return ((JavaParserEnumDeclaration.ValuesMethod)methodDeclaration)
+				.resolveTypeVariables(context, parameterTypes);
+		}
+		else if (methodDeclaration instanceof ReflectionMethodDeclaration)
+		{
+			return ((ReflectionMethodDeclaration)methodDeclaration)
+				.resolveTypeVariables(context, parameterTypes);
+		}
+		else
+		{
+			throw new UnsupportedOperationException();
+		}
+	}
 }

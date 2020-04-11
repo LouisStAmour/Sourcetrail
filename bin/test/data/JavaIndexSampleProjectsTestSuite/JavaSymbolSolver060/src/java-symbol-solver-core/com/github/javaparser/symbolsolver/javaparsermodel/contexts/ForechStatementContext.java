@@ -16,6 +16,8 @@
 
 package com.github.javaparser.symbolsolver.javaparsermodel.contexts;
 
+import static com.github.javaparser.symbolsolver.javaparser.Navigator.getParentNode;
+
 import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ForeachStmt;
@@ -25,36 +27,45 @@ import com.github.javaparser.symbolsolver.model.declarations.ValueDeclaration;
 import com.github.javaparser.symbolsolver.model.resolution.SymbolReference;
 import com.github.javaparser.symbolsolver.model.resolution.TypeSolver;
 import com.github.javaparser.symbolsolver.model.typesystem.Type;
-
 import java.util.List;
 
-import static com.github.javaparser.symbolsolver.javaparser.Navigator.getParentNode;
+public class ForechStatementContext extends AbstractJavaParserContext<ForeachStmt>
+{
+	public ForechStatementContext(ForeachStmt wrappedNode, TypeSolver typeSolver)
+	{
+		super(wrappedNode, typeSolver);
+	}
 
-public class ForechStatementContext extends AbstractJavaParserContext<ForeachStmt> {
+	@Override
+	public SymbolReference<? extends ValueDeclaration> solveSymbol(String name, TypeSolver typeSolver)
+	{
+		if (wrappedNode.getVariable().getVariables().size() != 1)
+		{
+			throw new IllegalStateException();
+		}
+		VariableDeclarator variableDeclarator = wrappedNode.getVariable().getVariables().get(0);
+		if (variableDeclarator.getName().getId().equals(name))
+		{
+			return SymbolReference.solved(
+				JavaParserSymbolDeclaration.localVar(variableDeclarator, typeSolver));
+		}
+		else
+		{
+			if (getParentNode(wrappedNode) instanceof BlockStmt)
+			{
+				return StatementContext.solveInBlock(name, typeSolver, wrappedNode);
+			}
+			else
+			{
+				return getParent().solveSymbol(name, typeSolver);
+			}
+		}
+	}
 
-    public ForechStatementContext(ForeachStmt wrappedNode, TypeSolver typeSolver) {
-        super(wrappedNode, typeSolver);
-    }
-
-    @Override
-    public SymbolReference<? extends ValueDeclaration> solveSymbol(String name, TypeSolver typeSolver) {
-        if (wrappedNode.getVariable().getVariables().size() != 1) {
-            throw new IllegalStateException();
-        }
-        VariableDeclarator variableDeclarator = wrappedNode.getVariable().getVariables().get(0);
-        if (variableDeclarator.getName().getId().equals(name)) {
-            return SymbolReference.solved(JavaParserSymbolDeclaration.localVar(variableDeclarator, typeSolver));
-        } else {
-            if (getParentNode(wrappedNode) instanceof BlockStmt) {
-                return StatementContext.solveInBlock(name, typeSolver, wrappedNode);
-            } else {
-                return getParent().solveSymbol(name, typeSolver);
-            }
-        }
-    }
-
-    @Override
-    public SymbolReference<MethodDeclaration> solveMethod(String name, List<Type> argumentsTypes, boolean staticOnly, TypeSolver typeSolver) {
-        return getParent().solveMethod(name, argumentsTypes, false, typeSolver);
-    }
+	@Override
+	public SymbolReference<MethodDeclaration> solveMethod(
+		String name, List<Type> argumentsTypes, boolean staticOnly, TypeSolver typeSolver)
+	{
+		return getParent().solveMethod(name, argumentsTypes, false, typeSolver);
+	}
 }

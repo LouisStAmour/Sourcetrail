@@ -1,12 +1,8 @@
 #include "player.h"
 
-Player::Player( Field::Token token, const char* name )
-	: token_( token )
-	, name_( name ) {
-}
+Player::Player(Field::Token token, const char* name): token_(token), name_(name) {}
 
-Player::~Player() {
-}
+Player::~Player() {}
 
 const Field::Token& Player::getToken() const
 {

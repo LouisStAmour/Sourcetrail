@@ -16,6 +16,8 @@
 
 package com.github.javaparser.symbolsolver.javaparsermodel.contexts;
 
+import static com.github.javaparser.symbolsolver.javaparser.Navigator.getParentNode;
+
 import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.VariableDeclarationExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
@@ -28,55 +30,69 @@ import com.github.javaparser.symbolsolver.model.resolution.TypeSolver;
 import com.github.javaparser.symbolsolver.model.resolution.Value;
 import com.github.javaparser.symbolsolver.model.typesystem.Type;
 import com.github.javaparser.symbolsolver.resolution.SymbolDeclarator;
-
 import java.util.List;
 import java.util.Optional;
 
-import static com.github.javaparser.symbolsolver.javaparser.Navigator.getParentNode;
+public class TryWithResourceContext extends AbstractJavaParserContext<TryStmt>
+{
+	public TryWithResourceContext(TryStmt wrappedNode, TypeSolver typeSolver)
+	{
+		super(wrappedNode, typeSolver);
+	}
 
-public class TryWithResourceContext extends AbstractJavaParserContext<TryStmt> {
+	@Override public Optional<Value> solveSymbolAsValue(String name, TypeSolver typeSolver)
+	{
+		for (VariableDeclarationExpr expr: wrappedNode.getResources())
+		{
+			for (VariableDeclarator v: expr.getVariables())
+			{
+				if (v.getName().getIdentifier().equals(name))
+				{
+					JavaParserSymbolDeclaration decl = JavaParserSymbolDeclaration.localVar(
+						v, typeSolver);
+					return Optional.of(Value.from(decl));
+				}
+			}
+		}
 
-    public TryWithResourceContext(TryStmt wrappedNode, TypeSolver typeSolver) {
-        super(wrappedNode, typeSolver);
-    }
+		if (getParentNode(wrappedNode) instanceof BlockStmt)
+		{
+			return StatementContext.solveInBlockAsValue(name, typeSolver, wrappedNode);
+		}
+		else
+		{
+			return getParent().solveSymbolAsValue(name, typeSolver);
+		}
+	}
 
-    @Override
-    public Optional<Value> solveSymbolAsValue(String name, TypeSolver typeSolver) {
-        for (VariableDeclarationExpr expr : wrappedNode.getResources()) {
-            for (VariableDeclarator v : expr.getVariables()) {
-                if (v.getName().getIdentifier().equals(name)) {
-                    JavaParserSymbolDeclaration decl = JavaParserSymbolDeclaration.localVar(v, typeSolver);
-                    return Optional.of(Value.from(decl));
-                }
-            }
-        }
+	@Override
+	public SymbolReference<? extends ValueDeclaration> solveSymbol(String name, TypeSolver typeSolver)
+	{
+		for (VariableDeclarationExpr expr: wrappedNode.getResources())
+		{
+			for (VariableDeclarator v: expr.getVariables())
+			{
+				if (v.getName().getIdentifier().equals(name))
+				{
+					return SymbolReference.solved(JavaParserSymbolDeclaration.localVar(v, typeSolver));
+				}
+			}
+		}
 
-        if (getParentNode(wrappedNode) instanceof BlockStmt) {
-            return StatementContext.solveInBlockAsValue(name, typeSolver, wrappedNode);
-        } else {
-            return getParent().solveSymbolAsValue(name, typeSolver);
-        }
-    }
+		if (getParentNode(wrappedNode) instanceof BlockStmt)
+		{
+			return StatementContext.solveInBlock(name, typeSolver, wrappedNode);
+		}
+		else
+		{
+			return getParent().solveSymbol(name, typeSolver);
+		}
+	}
 
-    @Override
-    public SymbolReference<? extends ValueDeclaration> solveSymbol(String name, TypeSolver typeSolver) {
-        for (VariableDeclarationExpr expr : wrappedNode.getResources()) {
-            for (VariableDeclarator v : expr.getVariables()) {
-                if (v.getName().getIdentifier().equals(name)) {
-                    return SymbolReference.solved(JavaParserSymbolDeclaration.localVar(v, typeSolver));
-                }
-            }
-        }
-
-        if (getParentNode(wrappedNode) instanceof BlockStmt) {
-            return StatementContext.solveInBlock(name, typeSolver, wrappedNode);
-        } else {
-            return getParent().solveSymbol(name, typeSolver);
-        }
-    }
-
-    @Override
-    public SymbolReference<MethodDeclaration> solveMethod(String name, List<Type> argumentsTypes, boolean staticOnly, TypeSolver typeSolver) {
-        return getParent().solveMethod(name, argumentsTypes, false, typeSolver);
-    }
+	@Override
+	public SymbolReference<MethodDeclaration> solveMethod(
+		String name, List<Type> argumentsTypes, boolean staticOnly, TypeSolver typeSolver)
+	{
+		return getParent().solveMethod(name, argumentsTypes, false, typeSolver);
+	}
 }

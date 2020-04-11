@@ -8,7 +8,9 @@ public:
 	int member;
 };
 
-struct Struct {};
+struct Struct
+{
+};
 
 enum Enum
 {
@@ -19,13 +21,25 @@ typedef int TypeDef;
 
 namespace package
 {
-	class C {};
-}
+class C
+{
+};
+}	 // namespace package
 
-struct Str1 {};
-struct Str2 {};
-struct Str3 {};
-struct Str4 {};
-struct Str5 {};
+struct Str1
+{
+};
+struct Str2
+{
+};
+struct Str3
+{
+};
+struct Str4
+{
+};
+struct Str5
+{
+};
 
 #endif

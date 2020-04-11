@@ -22,25 +22,23 @@ package com.github.javaparser.symbolsolver.model.declarations;
  * @author Federico Tomassetti
  */
 public interface FieldDeclaration extends ValueDeclaration, HasAccessLevel {
+	/**
+	 * Is the field static?
+	 */
+	boolean isStatic();
 
-    /**
-     * Is the field static?
-     */
-    boolean isStatic();
+	@Override default boolean isField()
+	{
+		return true;
+	}
 
-    @Override
-    default boolean isField() {
-        return true;
-    }
+	@Override default FieldDeclaration asField()
+	{
+		return this;
+	}
 
-    @Override
-    default FieldDeclaration asField() {
-        return this;
-    }
-
-    /**
-     * The type on which this field has been declared
-     */
-    TypeDeclaration declaringType();
-
+	/**
+	 * The type on which this field has been declared
+	 */
+	TypeDeclaration declaringType();
 }

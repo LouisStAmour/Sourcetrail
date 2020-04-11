@@ -25,16 +25,14 @@ import java.util.Optional;
  * @author Federico Tomassetti
  */
 public interface TypeParametrizable {
+	/**
+	 * The list of type parameters defined on this element.
+	 */
+	List<TypeParameterDeclaration> getTypeParameters();
 
-    /**
-     * The list of type parameters defined on this element.
-     */
-    List<TypeParameterDeclaration> getTypeParameters();
-
-    /**
-     * Find the closest TypeParameterDeclaration with the given name.
-     * It first look on this element itself and then on the containers.
-     */
-    Optional<TypeParameterDeclaration> findTypeParameter(String name);
-
+	/**
+	 * Find the closest TypeParameterDeclaration with the given name.
+	 * It first look on this element itself and then on the containers.
+	 */
+	Optional<TypeParameterDeclaration> findTypeParameter(String name);
 }

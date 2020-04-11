@@ -2,7 +2,6 @@
 #define SEARCH_TUTORIAL_1_H
 
 
-
 #include "utility.h"
 
 //------------------------------------------------------------------------------
@@ -21,12 +20,8 @@
 class SearchTutorial
 {
 public:
-	SearchTutorial()
-	{
-	}
+	SearchTutorial() {}
 };
 
 
-
-#endif // SEARCH_TUTORIAL_1_H
-
+#endif	  // SEARCH_TUTORIAL_1_H

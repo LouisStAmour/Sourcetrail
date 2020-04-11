@@ -1,7 +1,6 @@
 
 namespace KEYWORD_TESTS
 {
-
 // TEST: certain keywords
 // START ----------------------------------------------------------------------
 
@@ -16,7 +15,6 @@ namespace KEYWORD_TESTS
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: autocomplete within symbol types
 // START ----------------------------------------------------------------------
 
@@ -24,7 +22,6 @@ namespace KEYWORD_TESTS
 // RESULTS: only 'main.cpp' is shown in list
 
 // END ------------------------------------------------------------------------
-
 
 
 // TEST: autocomplete within multiple symbol types
@@ -35,6 +32,6 @@ namespace KEYWORD_TESTS
 
 // END ------------------------------------------------------------------------
 
-}
+}	 // namespace KEYWORD_TESTS
 
 error;

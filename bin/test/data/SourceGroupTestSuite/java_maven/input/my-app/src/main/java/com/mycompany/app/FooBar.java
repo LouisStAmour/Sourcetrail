@@ -1,5 +1,4 @@
 package com.mycompany.app;
 
-public interface FooBar
-{
+public interface FooBar {
 }

@@ -2,14 +2,13 @@
 #define SEARCH_TUTORIAL_5_H
 
 
-
 #include "utility.h"
 
 //------------------------------------------------------------------------------
 //
 // 9 - CONGRATULATONS
 //  You have completed the challenge of search.
-//  Oh, I almost forgot: You can only find nodes such as symbols via the search 
+//  Oh, I almost forgot: You can only find nodes such as symbols via the search
 //  bar. It doesn't allow you to find edges like calls or inheritance. At least
 //  not yet.
 //  Try to get back to the the central hub using the search bar!
@@ -18,12 +17,10 @@
 
 namespace b
 {
-	struct NameConflict
-	{
-	};
-}
+struct NameConflict
+{
+};
+}	 // namespace b
 
 
-
-#endif // SEARCH_TUTORIAL_5_H
-
+#endif	  // SEARCH_TUTORIAL_5_H

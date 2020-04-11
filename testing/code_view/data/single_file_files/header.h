@@ -7,36 +7,6 @@
 // END ------------------------------------------------------------------------
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #pragma once
 
 class Reference
@@ -52,29 +22,6 @@ class Reference
 // ACTION: Use reference navigation at top and navigate to next reference.
 
 // END ------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // TEST: edge click switches to file - continued

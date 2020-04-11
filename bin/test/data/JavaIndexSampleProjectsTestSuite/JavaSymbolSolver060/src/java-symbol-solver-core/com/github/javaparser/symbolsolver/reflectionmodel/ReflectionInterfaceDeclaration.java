@@ -30,7 +30,6 @@ import com.github.javaparser.symbolsolver.model.typesystem.NullType;
 import com.github.javaparser.symbolsolver.model.typesystem.ReferenceType;
 import com.github.javaparser.symbolsolver.model.typesystem.ReferenceTypeImpl;
 import com.github.javaparser.symbolsolver.model.typesystem.Type;
-
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -38,268 +37,311 @@ import java.util.stream.Collectors;
 /**
  * @author Federico Tomassetti
  */
-public class ReflectionInterfaceDeclaration extends AbstractTypeDeclaration implements InterfaceDeclaration {
+public class ReflectionInterfaceDeclaration
+	extends AbstractTypeDeclaration implements InterfaceDeclaration
+{
+	///
+	/// Fields
+	///
 
-    ///
-    /// Fields
-    ///
+	private Class<?> clazz;
+	private TypeSolver typeSolver;
+	private ReflectionClassAdapter reflectionClassAdapter;
 
-    private Class<?> clazz;
-    private TypeSolver typeSolver;
-    private ReflectionClassAdapter reflectionClassAdapter;
+	///
+	/// Constructor
+	///
 
-    ///
-    /// Constructor
-    ///
+	public ReflectionInterfaceDeclaration(Class<?> clazz, TypeSolver typeSolver)
+	{
+		if (!clazz.isInterface())
+		{
+			throw new IllegalArgumentException();
+		}
 
-    public ReflectionInterfaceDeclaration(Class<?> clazz, TypeSolver typeSolver) {
-        if (!clazz.isInterface()) {
-            throw new IllegalArgumentException();
-        }
+		this.clazz = clazz;
+		this.typeSolver = typeSolver;
+		this.reflectionClassAdapter = new ReflectionClassAdapter(clazz, typeSolver, this);
+	}
 
-        this.clazz = clazz;
-        this.typeSolver = typeSolver;
-        this.reflectionClassAdapter = new ReflectionClassAdapter(clazz, typeSolver, this);
-    }
+	///
+	/// Public methods
+	///
 
-    ///
-    /// Public methods
-    ///
+	@Override public boolean isAssignableBy(ReferenceTypeDeclaration other)
+	{
+		return isAssignableBy(new ReferenceTypeImpl(other, typeSolver));
+	}
 
-    @Override
-    public boolean isAssignableBy(ReferenceTypeDeclaration other) {
-        return isAssignableBy(new ReferenceTypeImpl(other, typeSolver));
-    }
+	@Override public String getPackageName()
+	{
+		if (clazz.getPackage() != null)
+		{
+			return clazz.getPackage().getName();
+		}
+		return null;
+	}
 
-    @Override
-    public String getPackageName() {
-        if (clazz.getPackage() != null) {
-            return clazz.getPackage().getName();
-        }
-        return null;
-    }
+	@Override public String getClassName()
+	{
+		String canonicalName = clazz.getCanonicalName();
+		if (canonicalName != null && getPackageName() != null)
+		{
+			return canonicalName.substring(getPackageName().length() + 1, canonicalName.length());
+		}
+		return null;
+	}
 
-    @Override
-    public String getClassName() {
-        String canonicalName = clazz.getCanonicalName();
-        if (canonicalName != null && getPackageName() != null) {
-            return canonicalName.substring(getPackageName().length() + 1, canonicalName.length());
-        }
-        return null;
-    }
+	@Override public String getQualifiedName()
+	{
+		return clazz.getCanonicalName();
+	}
 
-    @Override
-    public String getQualifiedName() {
-        return clazz.getCanonicalName();
-    }
+	@Deprecated
+	public SymbolReference<MethodDeclaration> solveMethod(
+		String name, List<Type> parameterTypes, boolean staticOnly)
+	{
+		return ReflectionMethodResolutionLogic.solveMethod(
+			name, parameterTypes, staticOnly, typeSolver, this, clazz);
+	}
 
-    @Deprecated
-    public SymbolReference<MethodDeclaration> solveMethod(String name, List<Type> parameterTypes, boolean staticOnly) {
-        return ReflectionMethodResolutionLogic.solveMethod(name, parameterTypes, staticOnly,
-                typeSolver,this, clazz);
-    }
+	@Override public String toString()
+	{
+		return "ReflectionInterfaceDeclaration{"
+			+ "clazz=" + clazz.getCanonicalName() + '}';
+	}
 
-    @Override
-    public String toString() {
-        return "ReflectionInterfaceDeclaration{" +
-                "clazz=" + clazz.getCanonicalName() +
-                '}';
-    }
+	public Type getUsage(Node node)
+	{
+		return new ReferenceTypeImpl(this, typeSolver);
+	}
 
-    public Type getUsage(Node node) {
-        return new ReferenceTypeImpl(this, typeSolver);
-    }
+	@Override public boolean equals(Object o)
+	{
+		if (this == o)
+			return true;
+		if (!(o instanceof ReflectionInterfaceDeclaration))
+			return false;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ReflectionInterfaceDeclaration)) return false;
+		ReflectionInterfaceDeclaration that = (ReflectionInterfaceDeclaration)o;
 
-        ReflectionInterfaceDeclaration that = (ReflectionInterfaceDeclaration) o;
+		if (!clazz.getCanonicalName().equals(that.clazz.getCanonicalName()))
+			return false;
 
-        if (!clazz.getCanonicalName().equals(that.clazz.getCanonicalName())) return false;
+		if (!getTypeParameters().equals(that.getTypeParameters()))
+		{
+			return false;
+		}
 
-        if (!getTypeParameters().equals(that.getTypeParameters())) {
-            return false;
-        }
+		return true;
+	}
 
-        return true;
-    }
+	@Override public int hashCode()
+	{
+		return clazz.hashCode();
+	}
 
-    @Override
-    public int hashCode() {
-        return clazz.hashCode();
-    }
+	public Optional<MethodUsage> solveMethodAsUsage(
+		String name,
+		List<Type> parameterTypes,
+		TypeSolver typeSolver,
+		Context invokationContext,
+		List<Type> typeParameterValues)
+	{
+		Optional<MethodUsage> res = ReflectionMethodResolutionLogic.solveMethodAsUsage(
+			name, parameterTypes, typeSolver, invokationContext, typeParameterValues, this, clazz);
+		if (res.isPresent())
+		{
+			// We have to replace method type typeParametersValues here
+			InferenceContext inferenceContext = new InferenceContext(MyObjectProvider.INSTANCE);
+			MethodUsage methodUsage = res.get();
+			int i = 0;
+			List<Type> parameters = new LinkedList<>();
+			for (Type actualType: parameterTypes)
+			{
+				Type formalType = methodUsage.getParamType(i);
+				// We need to replace the class type typeParametersValues (while we derive the method ones)
 
-    public Optional<MethodUsage> solveMethodAsUsage(String name, List<Type> parameterTypes, TypeSolver typeSolver, Context invokationContext, List<Type> typeParameterValues) {
-        Optional<MethodUsage> res = ReflectionMethodResolutionLogic.solveMethodAsUsage(name, parameterTypes, typeSolver, invokationContext,
-                typeParameterValues, this, clazz);
-        if (res.isPresent()) {
-            // We have to replace method type typeParametersValues here
-            InferenceContext inferenceContext = new InferenceContext(MyObjectProvider.INSTANCE);
-            MethodUsage methodUsage = res.get();
-            int i = 0;
-            List<Type> parameters = new LinkedList<>();
-            for (Type actualType : parameterTypes) {
-                Type formalType = methodUsage.getParamType(i);
-                // We need to replace the class type typeParametersValues (while we derive the method ones)
+				parameters.add(inferenceContext.addPair(formalType, actualType));
+				i++;
+			}
+			try
+			{
+				Type returnType = inferenceContext.addSingle(methodUsage.returnType());
+				for (int j = 0; j < parameters.size(); j++)
+				{
+					methodUsage = methodUsage.replaceParamType(
+						j, inferenceContext.resolve(parameters.get(j)));
+				}
+				methodUsage = methodUsage.replaceReturnType(inferenceContext.resolve(returnType));
+				return Optional.of(methodUsage);
+			}
+			catch (ConfilictingGenericTypesException e)
+			{
+				return Optional.empty();
+			}
+		}
+		else
+		{
+			return res;
+		}
+	}
 
-                parameters.add(inferenceContext.addPair(formalType, actualType));
-                i++;
-            }
-            try {
-                Type returnType = inferenceContext.addSingle(methodUsage.returnType());
-                for (int j=0;j<parameters.size();j++) {
-                    methodUsage = methodUsage.replaceParamType(j, inferenceContext.resolve(parameters.get(j)));
-                }
-                methodUsage = methodUsage.replaceReturnType(inferenceContext.resolve(returnType));
-                return Optional.of(methodUsage);
-            } catch (ConfilictingGenericTypesException e) {
-                return Optional.empty();
-            }
-        } else {
-            return res;
-        }
-    }
+	@Override public boolean canBeAssignedTo(ReferenceTypeDeclaration other)
+	{
+		if (other instanceof LambdaArgumentTypePlaceholder)
+		{
+			return isFunctionalInterface();
+		}
+		if (other.getQualifiedName().equals(getQualifiedName()))
+		{
+			return true;
+		}
+		if (this.clazz.getSuperclass() != null &&
+			new ReflectionInterfaceDeclaration(clazz.getSuperclass(), typeSolver).canBeAssignedTo(other))
+		{
+			return true;
+		}
+		for (Class interfaze: clazz.getInterfaces())
+		{
+			if (new ReflectionInterfaceDeclaration(interfaze, typeSolver).canBeAssignedTo(other))
+			{
+				return true;
+			}
+		}
 
-    @Override
-    public boolean canBeAssignedTo(ReferenceTypeDeclaration other) {
-        if (other instanceof LambdaArgumentTypePlaceholder) {
-            return isFunctionalInterface();
-        }
-        if (other.getQualifiedName().equals(getQualifiedName())) {
-            return true;
-        }
-        if (this.clazz.getSuperclass() != null
-                && new ReflectionInterfaceDeclaration(clazz.getSuperclass(), typeSolver).canBeAssignedTo(other)) {
-            return true;
-        }
-        for (Class interfaze : clazz.getInterfaces()) {
-            if (new ReflectionInterfaceDeclaration(interfaze, typeSolver).canBeAssignedTo(other)) {
-                return true;
-            }
-        }
+		if (other.getQualifiedName().equals(Object.class.getCanonicalName()))
+		{
+			return true;
+		}
 
-        if (other.getQualifiedName().equals(Object.class.getCanonicalName())) {
-            return true;
-        }
+		return false;
+	}
 
-        return false;
-    }
+	@Override public boolean isAssignableBy(Type type)
+	{
+		if (type instanceof NullType)
+		{
+			return true;
+		}
+		if (type instanceof LambdaArgumentTypePlaceholder)
+		{
+			return isFunctionalInterface();
+		}
+		if (type.isArray())
+		{
+			return false;
+		}
+		if (type.isPrimitive())
+		{
+			return false;
+		}
+		if (type.describe().equals(getQualifiedName()))
+		{
+			return true;
+		}
+		if (type instanceof ReferenceTypeImpl)
+		{
+			ReferenceTypeImpl otherTypeDeclaration = (ReferenceTypeImpl)type;
+			return otherTypeDeclaration.getTypeDeclaration().canBeAssignedTo(this);
+		}
 
-    @Override
-    public boolean isAssignableBy(Type type) {
-        if (type instanceof NullType) {
-            return true;
-        }
-        if (type instanceof LambdaArgumentTypePlaceholder) {
-            return isFunctionalInterface();
-        }
-        if (type.isArray()) {
-            return false;
-        }
-        if (type.isPrimitive()) {
-            return false;
-        }
-        if (type.describe().equals(getQualifiedName())) {
-            return true;
-        }
-        if (type instanceof ReferenceTypeImpl) {
-            ReferenceTypeImpl otherTypeDeclaration = (ReferenceTypeImpl) type;
-            return otherTypeDeclaration.getTypeDeclaration().canBeAssignedTo(this);
-        }
+		return false;
+	}
 
-        return false;
-    }
+	@Override public boolean isTypeParameter()
+	{
+		return false;
+	}
 
-    @Override
-    public boolean isTypeParameter() {
-        return false;
-    }
+	@Override public FieldDeclaration getField(String name)
+	{
+		return reflectionClassAdapter.getField(name);
+	}
 
-    @Override
-    public FieldDeclaration getField(String name) {
-        return reflectionClassAdapter.getField(name);
-    }
+	@Override public List<FieldDeclaration> getAllFields()
+	{
+		return reflectionClassAdapter.getAllFields();
+	}
 
-    @Override
-    public List<FieldDeclaration> getAllFields() {
-        return reflectionClassAdapter.getAllFields();
-    }
+	@Deprecated
+	public SymbolReference<? extends ValueDeclaration> solveSymbol(String name, TypeSolver typeSolver)
+	{
+		for (Field field: clazz.getFields())
+		{
+			if (field.getName().equals(name))
+			{
+				return SymbolReference.solved(new ReflectionFieldDeclaration(field, typeSolver));
+			}
+		}
+		return SymbolReference.unsolved(ValueDeclaration.class);
+	}
 
-    @Deprecated
-    public SymbolReference<? extends ValueDeclaration> solveSymbol(String name, TypeSolver typeSolver) {
-        for (Field field : clazz.getFields()) {
-            if (field.getName().equals(name)) {
-                return SymbolReference.solved(new ReflectionFieldDeclaration(field, typeSolver));
-            }
-        }
-        return SymbolReference.unsolved(ValueDeclaration.class);
-    }
+	@Override public List<ReferenceType> getAncestors()
+	{
+		return reflectionClassAdapter.getAncestors();
+	}
 
-    @Override
-    public List<ReferenceType> getAncestors() {
-        return reflectionClassAdapter.getAncestors();
-    }
+	@Override public Set<MethodDeclaration> getDeclaredMethods()
+	{
+		return reflectionClassAdapter.getDeclaredMethods();
+	}
 
-    @Override
-    public Set<MethodDeclaration> getDeclaredMethods() {
-        return reflectionClassAdapter.getDeclaredMethods();
-    }
+	@Override public boolean hasField(String name)
+	{
+		return reflectionClassAdapter.hasField(name);
+	}
 
-    @Override
-    public boolean hasField(String name) {
-        return reflectionClassAdapter.hasField(name);
-    }
+	@Override public String getName()
+	{
+		return clazz.getSimpleName();
+	}
 
-    @Override
-    public String getName() {
-        return clazz.getSimpleName();
-    }
+	@Override public boolean isInterface()
+	{
+		return true;
+	}
 
-    @Override
-    public boolean isInterface() {
-        return true;
-    }
+	@Override public List<ReferenceType> getInterfacesExtended()
+	{
+		List<ReferenceType> res = new ArrayList<>();
+		for (Class i: clazz.getInterfaces())
+		{
+			res.add(new ReferenceTypeImpl(
+				new ReflectionInterfaceDeclaration(i, typeSolver), typeSolver));
+		}
+		return res;
+	}
 
-    @Override
-    public List<ReferenceType> getInterfacesExtended() {
-        List<ReferenceType> res = new ArrayList<>();
-        for (Class i : clazz.getInterfaces()) {
-            res.add(new ReferenceTypeImpl(new ReflectionInterfaceDeclaration(i, typeSolver), typeSolver));
-        }
-        return res;
-    }
-    
-    @Override
-    public Optional<ReferenceTypeDeclaration> containerType() {
-        return reflectionClassAdapter.containerType();
-    }
+	@Override public Optional<ReferenceTypeDeclaration> containerType()
+	{
+		return reflectionClassAdapter.containerType();
+	}
 
-    @Override
-    public Set<ReferenceTypeDeclaration> internalTypes() {
-        return Arrays.stream(this.clazz.getDeclaredClasses())
-                .map(ic -> ReflectionFactory.typeDeclarationFor(ic, typeSolver))
-                .collect(Collectors.toSet());
-    }
+	@Override public Set<ReferenceTypeDeclaration> internalTypes()
+	{
+		return Arrays.stream(this.clazz.getDeclaredClasses())
+			.map(ic -> ReflectionFactory.typeDeclarationFor(ic, typeSolver))
+			.collect(Collectors.toSet());
+	}
 
-    @Override
-    public InterfaceDeclaration asInterface() {
-        return this;
-    }
+	@Override public InterfaceDeclaration asInterface()
+	{
+		return this;
+	}
 
-    @Override
-    public boolean hasDirectlyAnnotation(String canonicalName) {
-        return reflectionClassAdapter.hasDirectlyAnnotation(canonicalName);
-    }
+	@Override public boolean hasDirectlyAnnotation(String canonicalName)
+	{
+		return reflectionClassAdapter.hasDirectlyAnnotation(canonicalName);
+	}
 
-    @Override
-    public List<TypeParameterDeclaration> getTypeParameters() {
-        return reflectionClassAdapter.getTypeParameters();
-    }
+	@Override public List<TypeParameterDeclaration> getTypeParameters()
+	{
+		return reflectionClassAdapter.getTypeParameters();
+	}
 
-    @Override
-    public AccessLevel accessLevel() {
-        return ReflectionFactory.modifiersToAccessLevel(this.clazz.getModifiers());
-    }
+	@Override public AccessLevel accessLevel()
+	{
+		return ReflectionFactory.modifiersToAccessLevel(this.clazz.getModifiers());
+	}
 }

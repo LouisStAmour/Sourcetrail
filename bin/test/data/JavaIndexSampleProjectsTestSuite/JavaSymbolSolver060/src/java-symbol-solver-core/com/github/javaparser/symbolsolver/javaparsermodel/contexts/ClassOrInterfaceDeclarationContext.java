@@ -25,84 +25,99 @@ import com.github.javaparser.symbolsolver.model.resolution.TypeSolver;
 import com.github.javaparser.symbolsolver.model.resolution.Value;
 import com.github.javaparser.symbolsolver.model.typesystem.Type;
 import com.github.javaparser.symbolsolver.model.typesystem.TypeVariable;
-
 import java.util.List;
 import java.util.Optional;
 
 /**
  * @author Federico Tomassetti
  */
-public class ClassOrInterfaceDeclarationContext extends AbstractJavaParserContext<ClassOrInterfaceDeclaration> {
+public class ClassOrInterfaceDeclarationContext
+	extends AbstractJavaParserContext<ClassOrInterfaceDeclaration>
+{
+	private JavaParserTypeDeclarationAdapter javaParserTypeDeclarationAdapter;
 
-    private JavaParserTypeDeclarationAdapter javaParserTypeDeclarationAdapter;
+	///
+	/// Constructors
+	///
 
-    ///
-    /// Constructors
-    ///
+	public ClassOrInterfaceDeclarationContext(
+		ClassOrInterfaceDeclaration wrappedNode, TypeSolver typeSolver)
+	{
+		super(wrappedNode, typeSolver);
+		this.javaParserTypeDeclarationAdapter = new JavaParserTypeDeclarationAdapter(
+			wrappedNode, typeSolver, getDeclaration(), this);
+	}
 
-    public ClassOrInterfaceDeclarationContext(ClassOrInterfaceDeclaration wrappedNode, TypeSolver typeSolver) {
-        super(wrappedNode, typeSolver);
-        this.javaParserTypeDeclarationAdapter = new JavaParserTypeDeclarationAdapter(wrappedNode, typeSolver,
-                getDeclaration(), this);
-    }
+	///
+	/// Public methods
+	///
 
-    ///
-    /// Public methods
-    ///
+	@Override
+	public SymbolReference<? extends ValueDeclaration> solveSymbol(String name, TypeSolver typeSolver)
+	{
+		if (typeSolver == null)
+			throw new IllegalArgumentException();
 
-    @Override
-    public SymbolReference<? extends ValueDeclaration> solveSymbol(String name, TypeSolver typeSolver) {
-        if (typeSolver == null) throw new IllegalArgumentException();
+		if (this.getDeclaration().hasVisibleField(name))
+		{
+			return SymbolReference.solved(this.getDeclaration().getVisibleField(name));
+		}
 
-        if (this.getDeclaration().hasVisibleField(name)) {
-            return SymbolReference.solved(this.getDeclaration().getVisibleField(name));
-        }
+		// then to parent
+		return getParent().solveSymbol(name, typeSolver);
+	}
 
-        // then to parent
-        return getParent().solveSymbol(name, typeSolver);
-    }
+	@Override public Optional<Value> solveSymbolAsValue(String name, TypeSolver typeSolver)
+	{
+		if (typeSolver == null)
+			throw new IllegalArgumentException();
 
-    @Override
-    public Optional<Value> solveSymbolAsValue(String name, TypeSolver typeSolver) {
-        if (typeSolver == null) throw new IllegalArgumentException();
+		if (this.getDeclaration().hasVisibleField(name))
+		{
+			return Optional.of(Value.from(this.getDeclaration().getVisibleField(name)));
+		}
 
-        if (this.getDeclaration().hasVisibleField(name)) {
-            return Optional.of(Value.from(this.getDeclaration().getVisibleField(name)));
-        }
+		// then to parent
+		return getParent().solveSymbolAsValue(name, typeSolver);
+	}
 
-        // then to parent
-        return getParent().solveSymbolAsValue(name, typeSolver);
-    }
+	@Override public Optional<Type> solveGenericType(String name, TypeSolver typeSolver)
+	{
+		for (com.github.javaparser.ast.type.TypeParameter tp: wrappedNode.getTypeParameters())
+		{
+			if (tp.getName().getId().equals(name))
+			{
+				return Optional.of(new TypeVariable(new JavaParserTypeParameter(tp, typeSolver)));
+			}
+		}
+		return getParent().solveGenericType(name, typeSolver);
+	}
 
-    @Override
-    public Optional<Type> solveGenericType(String name, TypeSolver typeSolver) {
-        for (com.github.javaparser.ast.type.TypeParameter tp : wrappedNode.getTypeParameters()) {
-            if (tp.getName().getId().equals(name)) {
-                return Optional.of(new TypeVariable(new JavaParserTypeParameter(tp, typeSolver)));
-            }
-        }
-        return getParent().solveGenericType(name, typeSolver);
-    }
+	@Override public SymbolReference<TypeDeclaration> solveType(String name, TypeSolver typeSolver)
+	{
+		return javaParserTypeDeclarationAdapter.solveType(name, typeSolver);
+	}
 
-    @Override
-    public SymbolReference<TypeDeclaration> solveType(String name, TypeSolver typeSolver) {
-        return javaParserTypeDeclarationAdapter.solveType(name, typeSolver);
-    }
+	@Override
+	public SymbolReference<MethodDeclaration> solveMethod(
+		String name, List<Type> argumentsTypes, boolean staticOnly, TypeSolver typeSolver)
+	{
+		return javaParserTypeDeclarationAdapter.solveMethod(
+			name, argumentsTypes, staticOnly, typeSolver);
+	}
 
-    @Override
-    public SymbolReference<MethodDeclaration> solveMethod(String name, List<Type> argumentsTypes, boolean staticOnly, TypeSolver typeSolver) {
-        return javaParserTypeDeclarationAdapter.solveMethod(name, argumentsTypes, staticOnly, typeSolver);
-    }
+	public SymbolReference<ConstructorDeclaration> solveConstructor(
+		List<Type> argumentsTypes, TypeSolver typeSolver)
+	{
+		return javaParserTypeDeclarationAdapter.solveConstructor(argumentsTypes, typeSolver);
+	}
 
-    public SymbolReference<ConstructorDeclaration> solveConstructor(List<Type> argumentsTypes, TypeSolver typeSolver) {
-        return javaParserTypeDeclarationAdapter.solveConstructor(argumentsTypes, typeSolver);
-    }
+	///
+	/// Private methods
+	///
 
-    ///
-    /// Private methods
-    ///
-
-    private ReferenceTypeDeclaration getDeclaration() {
-        return JavaParserFacade.get(typeSolver).getTypeDeclaration(this.wrappedNode);
-    }
+	private ReferenceTypeDeclaration getDeclaration()
+	{
+		return JavaParserFacade.get(typeSolver).getTypeDeclaration(this.wrappedNode);
+	}
 }

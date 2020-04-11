@@ -22,5 +22,5 @@ package com.github.javaparser.symbolsolver.model.typesystem.parametrization;
  * @author Federico Tomassetti
  */
 public interface TypeParametrized {
-    TypeParametersMap typeParametersMap();
+	TypeParametersMap typeParametersMap();
 }

@@ -21,97 +21,107 @@ import com.github.javaparser.symbolsolver.model.declarations.ReferenceTypeDeclar
 import com.github.javaparser.symbolsolver.model.declarations.TypeParameterDeclaration;
 import com.github.javaparser.symbolsolver.model.declarations.TypeParametrizable;
 import com.github.javaparser.symbolsolver.model.resolution.TypeSolver;
-
-import javassist.bytecode.SignatureAttribute;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javassist.bytecode.SignatureAttribute;
 
 /**
  * @author Federico Tomassetti
  */
-public class JavassistTypeParameter implements TypeParameterDeclaration {
+public class JavassistTypeParameter implements TypeParameterDeclaration
+{
+	private SignatureAttribute.TypeParameter wrapped;
+	private TypeSolver typeSolver;
+	private TypeParametrizable container;
 
-    private SignatureAttribute.TypeParameter wrapped;
-    private TypeSolver typeSolver;
-    private TypeParametrizable container;
+	public JavassistTypeParameter(
+		SignatureAttribute.TypeParameter wrapped, TypeParametrizable container, TypeSolver typeSolver)
+	{
+		this.wrapped = wrapped;
+		this.typeSolver = typeSolver;
+		this.container = container;
+	}
 
-    public JavassistTypeParameter(SignatureAttribute.TypeParameter wrapped, TypeParametrizable container, TypeSolver typeSolver) {
-        this.wrapped = wrapped;
-        this.typeSolver = typeSolver;
-        this.container = container;
-    }
+	@Override public boolean equals(Object o)
+	{
+		if (this == o)
+			return true;
+		if (!(o instanceof TypeParameterDeclaration))
+			return false;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof TypeParameterDeclaration)) return false;
+		TypeParameterDeclaration that = (TypeParameterDeclaration)o;
 
-        TypeParameterDeclaration that = (TypeParameterDeclaration) o;
+		if (!getQualifiedName().equals(that.getQualifiedName()))
+		{
+			return false;
+		}
+		if (declaredOnType() != that.declaredOnType())
+		{
+			return false;
+		}
+		if (declaredOnMethod() != that.declaredOnMethod())
+		{
+			return false;
+		}
+		// TODO check bounds
+		return true;
+	}
 
-        if (!getQualifiedName().equals(that.getQualifiedName())) {
-            return false;
-        }
-        if (declaredOnType() != that.declaredOnType()) {
-            return false;
-        }
-        if (declaredOnMethod() != that.declaredOnMethod()) {
-            return false;
-        }
-        // TODO check bounds
-        return true;
-    }
+	@Override public String toString()
+	{
+		return "JavassistTypeParameter{" + wrapped.getName() + '}';
+	}
 
-    @Override
-    public String toString() {
-        return "JavassistTypeParameter{" +
-                wrapped.getName()
-                + '}';
-    }
+	@Override public String getName()
+	{
+		return wrapped.getName();
+	}
 
-    @Override
-    public String getName() {
-        return wrapped.getName();
-    }
+	@Override public String getContainerQualifiedName()
+	{
+		if (this.container instanceof ReferenceTypeDeclaration)
+		{
+			return ((ReferenceTypeDeclaration)this.container).getQualifiedName();
+		}
+		else if (this.container instanceof MethodLikeDeclaration)
+		{
+			return ((MethodLikeDeclaration)this.container).getQualifiedName();
+		}
+		throw new UnsupportedOperationException();
+	}
 
-    @Override
-    public String getContainerQualifiedName() {
-        if (this.container instanceof ReferenceTypeDeclaration) {
-            return ((ReferenceTypeDeclaration) this.container).getQualifiedName();
-        } else if (this.container instanceof MethodLikeDeclaration) {
-            return ((MethodLikeDeclaration) this.container).getQualifiedName();
-        }
-        throw new UnsupportedOperationException();
-    }
+	@Override public String getContainerId()
+	{
+		return getContainerQualifiedName();
+	}
 
-    @Override
-    public String getContainerId() {
-        return getContainerQualifiedName();
-    }
+	@Override public TypeParametrizable getContainer()
+	{
+		return this.container;
+	}
 
-    @Override
-    public TypeParametrizable getContainer() {
-        return this.container;
-    }
+	@Override public List<TypeParameterDeclaration.Bound> getBounds(TypeSolver typeSolver)
+	{
+		List<Bound> bounds = new ArrayList<>();
+		if (wrapped.getClassBound() != null &&
+			!wrapped.getClassBound().toString().equals(Object.class.getCanonicalName()))
+		{
+			throw new UnsupportedOperationException(wrapped.getClassBound().toString());
+		}
+		for (SignatureAttribute.ObjectType ot: wrapped.getInterfaceBound())
+		{
+			throw new UnsupportedOperationException(ot.toString());
+		}
+		return bounds;
+	}
 
-    @Override
-    public List<TypeParameterDeclaration.Bound> getBounds(TypeSolver typeSolver) {
-        List<Bound> bounds = new ArrayList<>();
-        if (wrapped.getClassBound() != null && !wrapped.getClassBound().toString().equals(Object.class.getCanonicalName())) {
-            throw new UnsupportedOperationException(wrapped.getClassBound().toString());
-        }
-        for (SignatureAttribute.ObjectType ot : wrapped.getInterfaceBound()) {
-            throw new UnsupportedOperationException(ot.toString());
-        }
-        return bounds;
-    }
-
-    @Override
-    public Optional<ReferenceTypeDeclaration> containerType() {
-        if (container instanceof ReferenceTypeDeclaration) {
-            return Optional.of((ReferenceTypeDeclaration) container);
-        }
-        return Optional.empty();
-    }
+	@Override public Optional<ReferenceTypeDeclaration> containerType()
+	{
+		if (container instanceof ReferenceTypeDeclaration)
+		{
+			return Optional.of((ReferenceTypeDeclaration)container);
+		}
+		return Optional.empty();
+	}
 }

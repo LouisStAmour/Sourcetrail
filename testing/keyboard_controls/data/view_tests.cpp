@@ -4,13 +4,14 @@
 // TEST: Switch Focus with Tab
 // START ----------------------------------------------------------------------
 
-class ViewTestClass {}; // <- ACTION: Activate
+class ViewTestClass
+{
+};	  // <- ACTION: Activate
 
 // ACTION: Press Tab continuously
 // RESULT: Focus is moved between Graph and Code
 
 // END ------------------------------------------------------------------------
-
 
 
 // TEST: Focus Search View
@@ -28,7 +29,6 @@ class ViewTestClass {}; // <- ACTION: Activate
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: Focus Graph View
 // START ----------------------------------------------------------------------
 
@@ -38,16 +38,14 @@ class ViewTestClass {}; // <- ACTION: Activate
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: Focus Code View
 // START ----------------------------------------------------------------------
 
-ViewTestClass v; // <- ACTION: Hover location of 'v'
+ViewTestClass v;	// <- ACTION: Hover location of 'v'
 
 // RESULT: code view receives focus
 
 // END ------------------------------------------------------------------------
-
 
 
 // TEST: Graph remembers previously focused node
@@ -66,11 +64,10 @@ ViewTestClass v; // <- ACTION: Hover location of 'v'
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: Code remembers previously focused location
 // START ----------------------------------------------------------------------
 
-ViewTestClass var; // <- ACTION: Hover location of 'var'
+ViewTestClass var;	  // <- ACTION: Hover location of 'var'
 
 // ACTION: Press Tab
 // RESULT: graph view receives focus
@@ -83,16 +80,17 @@ ViewTestClass var; // <- ACTION: Hover location of 'var'
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: Focus at active symbol when clicked in code
 // START ----------------------------------------------------------------------
 
-class ViewTestFocus // <- ACTION: Activate
+class ViewTestFocus	   // <- ACTION: Activate
 {
 	ViewTestClass member;
 };
 
-class ViewTestFocusDerived : public ViewTestFocus {};
+class ViewTestFocusDerived: public ViewTestFocus
+{
+};
 
 // RESULTS:
 // - Focus stays in code view
@@ -104,7 +102,6 @@ class ViewTestFocusDerived : public ViewTestFocus {};
 // - active node receives initial focus
 
 // END ------------------------------------------------------------------------
-
 
 
 // TEST: Focus at active symbol when clicked in graph

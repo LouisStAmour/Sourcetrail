@@ -6,21 +6,24 @@
 
 namespace alpha
 {
-	void foo() {}
-}
+void foo() {}
+}	 // namespace alpha
 
 namespace beta
 {
-	void foo() // <- ACTION 1: activate
-	{
-		alpha::foo();
-	}
+void foo()	  // <- ACTION 1: activate
+{
+	alpha::foo();
 }
+}	 // namespace beta
 
 namespace alpha
 {
-	void bar() { beta::foo(); }
+void bar()
+{
+	beta::foo();
 }
+}	 // namespace alpha
 
 // ACTION 2: toggle grouping by namespace on and off
 // RESULTS 2:
@@ -34,14 +37,13 @@ namespace alpha
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: group by file
 // START ----------------------------------------------------------------------
 
 #include "interaction_files/file.h"
 #include "interaction_files/include.h"
 
-int multi_file_function() // <- ACTION 1: activate
+int multi_file_function()	 // <- ACTION 1: activate
 {
 	File f;
 	package::C p;

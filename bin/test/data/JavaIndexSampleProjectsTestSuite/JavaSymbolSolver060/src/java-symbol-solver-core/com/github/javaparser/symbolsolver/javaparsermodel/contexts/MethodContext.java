@@ -16,21 +16,20 @@
 
 package com.github.javaparser.symbolsolver.javaparsermodel.contexts;
 
-
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.symbolsolver.model.resolution.TypeSolver;
 
 /**
  * @author Federico Tomassetti
  */
-public class MethodContext extends AbstractMethodLikeDeclarationContext<MethodDeclaration> {
+public class MethodContext extends AbstractMethodLikeDeclarationContext<MethodDeclaration>
+{
+	///
+	/// Constructors
+	///
 
-    ///
-    /// Constructors
-    ///
-
-    public MethodContext(MethodDeclaration wrappedNode, TypeSolver typeSolver) {
-        super(wrappedNode, typeSolver);
-    }
-
+	public MethodContext(MethodDeclaration wrappedNode, TypeSolver typeSolver)
+	{
+		super(wrappedNode, typeSolver);
+	}
 }

@@ -22,14 +22,14 @@ import com.github.javaparser.symbolsolver.model.resolution.TypeSolver;
 /**
  * @author Federico Tomassetti
  */
-public class ConstructorContext extends AbstractMethodLikeDeclarationContext<ConstructorDeclaration> {
+public class ConstructorContext extends AbstractMethodLikeDeclarationContext<ConstructorDeclaration>
+{
+	///
+	/// Constructors
+	///
 
-    ///
-    /// Constructors
-    ///
-
-    public ConstructorContext(ConstructorDeclaration wrappedNode, TypeSolver typeSolver) {
-        super(wrappedNode, typeSolver);
-    }
-
+	public ConstructorContext(ConstructorDeclaration wrappedNode, TypeSolver typeSolver)
+	{
+		super(wrappedNode, typeSolver);
+	}
 }

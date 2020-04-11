@@ -2,7 +2,6 @@
 #define CODE_TUTORIAL_1_H
 
 
-
 #include "utility.h"
 
 //------------------------------------------------------------------------------
@@ -27,14 +26,10 @@
 class CodeTutorial
 {
 public:
-	CodeTutorial()
-	{
-	}
+	CodeTutorial() {}
 
 	static int meaning_of_life_the_universe_and_everything;
 };
 
 
-
-#endif // CODE_TUTORIAL_1_H
-
+#endif	  // CODE_TUTORIAL_1_H

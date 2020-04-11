@@ -22,10 +22,8 @@ package com.github.javaparser.symbolsolver.model.declarations;
  * @author Federico Tomassetti
  */
 public interface HasAccessLevel {
-
-    /**
-     * The AccessLevel of this element.
-     */
-    AccessLevel accessLevel();
-
+	/**
+	 * The AccessLevel of this element.
+	 */
+	AccessLevel accessLevel();
 }

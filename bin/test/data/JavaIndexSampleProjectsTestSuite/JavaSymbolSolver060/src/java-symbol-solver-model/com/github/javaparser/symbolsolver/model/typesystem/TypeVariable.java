@@ -17,103 +17,118 @@
 package com.github.javaparser.symbolsolver.model.typesystem;
 
 import com.github.javaparser.symbolsolver.model.declarations.TypeParameterDeclaration;
-
 import java.util.Map;
 
 /**
- * From JLS 4.4: A type variable is introduced by the declaration of a type parameter of a generic class,
- * interface, method, or constructor (§8.1.2, §9.1.2, §8.4.4, §8.8.4).
+ * From JLS 4.4: A type variable is introduced by the declaration of a type parameter of a generic
+ * class, interface, method, or constructor (§8.1.2, §9.1.2, §8.4.4, §8.8.4).
  *
  * @author Federico Tomassetti
  */
-public class TypeVariable implements Type {
+public class TypeVariable implements Type
+{
+	private TypeParameterDeclaration typeParameter;
 
-    private TypeParameterDeclaration typeParameter;
+	public TypeVariable(TypeParameterDeclaration typeParameter)
+	{
+		this.typeParameter = typeParameter;
+	}
 
-    public TypeVariable(TypeParameterDeclaration typeParameter) {
-        this.typeParameter = typeParameter;
-    }
+	@Override public String toString()
+	{
+		return "TypeVariable {" + typeParameter.getQualifiedName() + "}";
+	}
 
-    @Override
-    public String toString() {
-        return "TypeVariable {" + typeParameter.getQualifiedName() + "}";
-    }
+	public String qualifiedName()
+	{
+		return this.typeParameter.getQualifiedName();
+	}
 
-    public String qualifiedName() {
-        return this.typeParameter.getQualifiedName();
-    }
+	@Override public boolean equals(Object o)
+	{
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+		TypeVariable that = (TypeVariable)o;
 
-        TypeVariable that = (TypeVariable) o;
+		if (!typeParameter.getName().equals(that.typeParameter.getName()))
+			return false;
+		if (typeParameter.declaredOnType() != that.typeParameter.declaredOnType())
+			return false;
+		if (typeParameter.declaredOnMethod() != that.typeParameter.declaredOnMethod())
+			return false;
 
-        if (!typeParameter.getName().equals(that.typeParameter.getName())) return false;
-        if (typeParameter.declaredOnType() != that.typeParameter.declaredOnType()) return false;
-        if (typeParameter.declaredOnMethod() != that.typeParameter.declaredOnMethod()) return false;
+		return true;
+	}
 
-        return true;
-    }
+	@Override public int hashCode()
+	{
+		return typeParameter.hashCode();
+	}
 
-    @Override
-    public int hashCode() {
-        return typeParameter.hashCode();
-    }
+	@Override public boolean isArray()
+	{
+		return false;
+	}
 
-    @Override
-    public boolean isArray() {
-        return false;
-    }
+	@Override public boolean isPrimitive()
+	{
+		return false;
+	}
 
-    @Override
-    public boolean isPrimitive() {
-        return false;
-    }
+	@Override
+	public Type replaceTypeVariables(
+		TypeParameterDeclaration tpToBeReplaced,
+		Type replaced,
+		Map<TypeParameterDeclaration, Type> inferredTypes)
+	{
+		if (tpToBeReplaced.getName().equals(this.typeParameter.getName()))
+		{
+			inferredTypes.put(this.asTypeParameter(), replaced);
+			return replaced;
+		}
+		else
+		{
+			return this;
+		}
+	}
 
-    @Override
-    public Type replaceTypeVariables(TypeParameterDeclaration tpToBeReplaced, Type replaced, Map<TypeParameterDeclaration, Type> inferredTypes) {
-        if(tpToBeReplaced.getName().equals(this.typeParameter.getName())){
-            inferredTypes.put(this.asTypeParameter(), replaced);
-            return replaced;
-        } else {
-            return this;
-        }
-    }
+	@Override public boolean isReferenceType()
+	{
+		return false;
+	}
 
-    @Override
-    public boolean isReferenceType() {
-        return false;
-    }
+	@Override public String describe()
+	{
+		return typeParameter.getName();
+	}
 
-    @Override
-    public String describe() {
-        return typeParameter.getName();
-    }
+	@Override public TypeParameterDeclaration asTypeParameter()
+	{
+		return typeParameter;
+	}
 
-    @Override
-    public TypeParameterDeclaration asTypeParameter() {
-        return typeParameter;
-    }
+	@Override public TypeVariable asTypeVariable()
+	{
+		return this;
+	}
 
-    @Override
-    public TypeVariable asTypeVariable() {
-        return this;
-    }
+	@Override public boolean isTypeVariable()
+	{
+		return true;
+	}
 
-    @Override
-    public boolean isTypeVariable() {
-        return true;
-    }
-
-    @Override
-    public boolean isAssignableBy(Type other) {
-        if (other.isTypeVariable()) {
-            return describe().equals(other.describe());
-        } else {
-            return true;
-        }
-    }
-
+	@Override public boolean isAssignableBy(Type other)
+	{
+		if (other.isTypeVariable())
+		{
+			return describe().equals(other.describe());
+		}
+		else
+		{
+			return true;
+		}
+	}
 }

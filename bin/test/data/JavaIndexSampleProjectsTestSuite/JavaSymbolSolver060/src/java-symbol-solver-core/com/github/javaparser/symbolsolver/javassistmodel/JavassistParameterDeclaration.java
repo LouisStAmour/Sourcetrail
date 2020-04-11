@@ -24,57 +24,57 @@ import javassist.CtClass;
 /**
  * @author Federico Tomassetti
  */
-public class JavassistParameterDeclaration implements ParameterDeclaration {
-    private Type type;
-    private TypeSolver typeSolver;
-    private boolean variadic;
+public class JavassistParameterDeclaration implements ParameterDeclaration
+{
+	private Type type;
+	private TypeSolver typeSolver;
+	private boolean variadic;
 
-    public JavassistParameterDeclaration(CtClass type, TypeSolver typeSolver, boolean variadic) {
-        this(JavassistFactory.typeUsageFor(type, typeSolver), typeSolver, variadic);
-    }
+	public JavassistParameterDeclaration(CtClass type, TypeSolver typeSolver, boolean variadic)
+	{
+		this(JavassistFactory.typeUsageFor(type, typeSolver), typeSolver, variadic);
+	}
 
-    public JavassistParameterDeclaration(Type type, TypeSolver typeSolver, boolean variadic) {
-        this.type = type;
-        this.typeSolver = typeSolver;
-        this.variadic = variadic;
-    }
+	public JavassistParameterDeclaration(Type type, TypeSolver typeSolver, boolean variadic)
+	{
+		this.type = type;
+		this.typeSolver = typeSolver;
+		this.variadic = variadic;
+	}
 
-    @Override
-    public String toString() {
-        return "JavassistParameterDeclaration{" +
-                "type=" + type +
-                ", typeSolver=" + typeSolver +
-                ", variadic=" + variadic +
-                '}';
-    }
+	@Override public String toString()
+	{
+		return "JavassistParameterDeclaration{"
+			+ "type=" + type + ", typeSolver=" + typeSolver + ", variadic=" + variadic + '}';
+	}
 
-    @Override
-    public String getName() {
-        throw new UnsupportedOperationException();
-    }
+	@Override public String getName()
+	{
+		throw new UnsupportedOperationException();
+	}
 
-    @Override
-    public boolean isField() {
-        throw new UnsupportedOperationException();
-    }
+	@Override public boolean isField()
+	{
+		throw new UnsupportedOperationException();
+	}
 
-    @Override
-    public boolean isParameter() {
-        throw new UnsupportedOperationException();
-    }
+	@Override public boolean isParameter()
+	{
+		throw new UnsupportedOperationException();
+	}
 
-    @Override
-    public boolean isVariadic() {
-        return variadic;
-    }
+	@Override public boolean isVariadic()
+	{
+		return variadic;
+	}
 
-    @Override
-    public boolean isType() {
-        throw new UnsupportedOperationException();
-    }
+	@Override public boolean isType()
+	{
+		throw new UnsupportedOperationException();
+	}
 
-    @Override
-    public Type getType() {
-        return type;
-    }
+	@Override public Type getType()
+	{
+		return type;
+	}
 }

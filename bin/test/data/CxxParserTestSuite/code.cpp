@@ -10,14 +10,14 @@ int ceil(float a)
 
 namespace X
 {
-	struct A;
+struct A;
 
-	enum E
-	{
-		P,
-		Q
-	};
-}
+enum E
+{
+	P,
+	Q
+};
+}	 // namespace X
 
 class B
 {
@@ -29,9 +29,7 @@ public:
 
 	B();
 
-	virtual ~B()
-	{
-	}
+	virtual ~B() {}
 
 protected:
 	virtual void process() = 0;
@@ -46,16 +44,13 @@ private:
 	H h;
 };
 
-B::B()
-	: count(0)
-{
-}
+B::B(): count(0) {}
 
 namespace
 {
-	int sum(int a, int b)
-	{
-		int c = a + b;
-		return c;
-	}
+int sum(int a, int b)
+{
+	int c = a + b;
+	return c;
 }
+}	 // namespace

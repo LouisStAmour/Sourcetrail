@@ -4,7 +4,7 @@
 // TEST: Graph focus restored on back
 // START ----------------------------------------------------------------------
 
-class HistoryTest // <- ACTION: activate
+class HistoryTest	 // <- ACTION: activate
 {
 public:
 	int member;
@@ -22,7 +22,6 @@ int func()
 // RESULT: The graph for 'HistoryTest' is restored with focus at 'func'
 
 // END ------------------------------------------------------------------------
-
 
 
 // TEST: Graph aggregation focus restored on back
@@ -47,11 +46,10 @@ public:
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: Code focus restored on back
 // START ----------------------------------------------------------------------
 
-HistoryTest createTest(); // <- ACTION: focus and activate 'createTest' from code
+HistoryTest createTest();	 // <- ACTION: focus and activate 'createTest' from code
 
 // ACTION: Navigate 'back' in history
 // RESULT: The code view is restored with focus at 'createTest'

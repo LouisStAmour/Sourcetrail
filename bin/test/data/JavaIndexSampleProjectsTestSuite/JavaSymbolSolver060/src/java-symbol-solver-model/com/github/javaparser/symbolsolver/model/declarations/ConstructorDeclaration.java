@@ -22,7 +22,5 @@ package com.github.javaparser.symbolsolver.model.declarations;
  * @author Federico Tomassetti
  */
 public interface ConstructorDeclaration extends MethodLikeDeclaration {
-
-    @Override
-    ClassDeclaration declaringType();
+	@Override ClassDeclaration declaringType();
 }

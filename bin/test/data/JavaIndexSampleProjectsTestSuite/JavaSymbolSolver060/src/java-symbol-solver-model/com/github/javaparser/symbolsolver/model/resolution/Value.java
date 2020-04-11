@@ -24,37 +24,39 @@ import com.github.javaparser.symbolsolver.model.typesystem.Type;
  *
  * @author Federico Tomassetti
  */
-public class Value {
-    private Type type;
-    private String name;
+public class Value
+{
+	private Type type;
+	private String name;
 
-    public Value(Type type, String name) {
-        this.type = type;
-        this.name = name;
-    }
+	public Value(Type type, String name)
+	{
+		this.type = type;
+		this.name = name;
+	}
 
-    /**
-     * Create a Value from a ValueDeclaration.
-     */
-    public static Value from(ValueDeclaration decl) {
-        Type type = decl.getType();
-        return new Value(type, decl.getName());
-    }
+	/**
+	 * Create a Value from a ValueDeclaration.
+	 */
+	public static Value from(ValueDeclaration decl)
+	{
+		Type type = decl.getType();
+		return new Value(type, decl.getName());
+	}
 
-    @Override
-    public String toString() {
-        return "Value{" +
-                "typeUsage=" + type +
-                ", name='" + name + '\'' +
-                '}';
-    }
+	@Override public String toString()
+	{
+		return "Value{"
+			+ "typeUsage=" + type + ", name='" + name + '\'' + '}';
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName()
+	{
+		return name;
+	}
 
-    public Type getType() {
-        return type;
-    }
-
+	public Type getType()
+	{
+		return type;
+	}
 }

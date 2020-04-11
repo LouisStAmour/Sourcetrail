@@ -23,7 +23,6 @@ typedef bool Seven;
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: dropdown open/close - click
 // START ----------------------------------------------------------------------
 
@@ -33,7 +32,6 @@ typedef bool Seven;
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: dropdown open/close - ESC
 // START ----------------------------------------------------------------------
 
@@ -41,7 +39,6 @@ typedef bool Seven;
 // RESULT: dropdown disappears
 
 // END ------------------------------------------------------------------------
-
 
 
 // TEST: going back
@@ -61,7 +58,6 @@ typedef bool Seven;
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: going forward
 // START ----------------------------------------------------------------------
 
@@ -78,7 +74,6 @@ typedef bool Seven;
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: dropdown selection
 // START ----------------------------------------------------------------------
 
@@ -90,11 +85,12 @@ typedef bool Seven;
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: history overwrite
 // START ----------------------------------------------------------------------
 
-namespace eight {} // <- ACTION: Activate namespace
+namespace eight
+{
+}	 // namespace eight
 
 // RESULTS:
 // - dropdown list shrinked to: eight, One
@@ -102,7 +98,6 @@ namespace eight {} // <- ACTION: Activate namespace
 // - history menu shows: eight, One, SIX, FIVE, Four, ...
 
 // END ------------------------------------------------------------------------
-
 
 
 // TEST: history menu selection
@@ -116,4 +111,3 @@ namespace eight {} // <- ACTION: Activate namespace
 // - history menu shows: Three, eight, One, SIX, FIVE, ...
 
 // END ------------------------------------------------------------------------
-

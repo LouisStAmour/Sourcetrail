@@ -1,5 +1,4 @@
 package foo;
 
-public interface FooBar
-{
+public interface FooBar {
 }

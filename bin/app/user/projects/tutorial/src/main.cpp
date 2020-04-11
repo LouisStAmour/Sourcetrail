@@ -2,7 +2,6 @@
 #define MAIN_H
 
 
-
 #include "code_tutorial_1.h"
 #include "code_tutorial_2.h"
 #include "code_tutorial_3.h"
@@ -36,6 +35,4 @@ int start_tour()
 }
 
 
-
-#endif // MAIN_H
-
+#endif	  // MAIN_H

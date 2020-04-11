@@ -1,21 +1,18 @@
 
 namespace SNIPPET_LIST_TESTS
 {
-
 // ACTION: switch to snippet mode with button at top right
-
 
 
 // TEST: snippets expanded by default
 // START ----------------------------------------------------------------------
 
-#include "snippet_list_files/header.h" // <- ACTION: activate file
+#include "snippet_list_files/header.h"	  // <- ACTION: activate file
 
 #include "snippet_list_files/zimpl.h"
 #include "snippet_list_files/zimpl2.h"
 
 // END ------------------------------------------------------------------------
-
 
 
 // TEST: scope expansion
@@ -29,11 +26,6 @@ public:
 		m_member = 10;
 
 
-
-
-
-
-
 		int r = 0;
 
 		for (int a = 0; a < 10; a++)
@@ -45,23 +37,18 @@ public:
 	}
 
 private:
-	int m_member; // <- ACTION 1: activate member
+	int m_member;	 // <- ACTION 1: activate member
 
-/*
-// RESULTS 1:
-// - 2 snippets are visible within the same file
-// - this whole comment block is visible
+	/*
+	// RESULTS 1:
+	// - 2 snippets are visible within the same file
+	// - this whole comment block is visible
 
-// ACTION 2: expand bottom scope of first snippet: foo()
-// RESULT 2: snippets are expanded and merged to one
+	// ACTION 2: expand bottom scope of first snippet: foo()
+	// RESULT 2: snippets are expanded and merged to one
 
-// ACTION 3: click the class A expansion at the bottom
-*/
-
-
-
-
-
+	// ACTION 3: click the class A expansion at the bottom
+	*/
 };
 
 /*
@@ -79,9 +66,9 @@ private:
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: file title bar and scroll bar stay fixed
-// START ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// START
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // ACTION: scroll up and down
 // RESULT: The file bar at the top and the scrollbar at the bottom stay in view
@@ -89,11 +76,10 @@ private:
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: minimizing snippets
 // START ----------------------------------------------------------------------
 
-int a = sum(1, 2); // <- ACTION 1: activate sum
+int a = sum(1, 2);	  // <- ACTION 1: activate sum
 
 /*
 // ACTION 2: click into the file bar area
@@ -106,11 +92,10 @@ int a = sum(1, 2); // <- ACTION 1: activate sum
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: maximizing snippets
 // START ----------------------------------------------------------------------
 
-int b = sum(3, 4); // <- ACTION 1: activate sum
+int b = sum(3, 4);	  // <- ACTION 1: activate sum
 
 /*
 // ACTION 2: click '[]' button in snippet bar
@@ -123,12 +108,11 @@ int b = sum(3, 4); // <- ACTION 1: activate sum
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: reference navigation and scrolling
 // START ----------------------------------------------------------------------
 
-int c = sum(5, 6); // <- ACTION 1: activate sum
-																					/* RESULT: view is scrolled here -> */ int d = sum(7, 8);
+int c = sum(5, 6);	  // <- ACTION 1: activate sum
+/* RESULT: view is scrolled here -> */ int d = sum(7, 8);
 
 /*
 // ACTION 2: Use reference navigation at top back and forward
@@ -141,11 +125,10 @@ int c = sum(5, 6); // <- ACTION 1: activate sum
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: edge click and scrolling
 // START ----------------------------------------------------------------------
 
-int e; // <- ACTION 1: activate int
+int e;	  // <- ACTION 1: activate int
 
 /*
 // ACTION 2: In the graph activate the edge between divide & int
@@ -157,17 +140,7 @@ int e; // <- ACTION 1: activate int
 */
 
 // END ------------------------------------------------------------------------
-}
-
-
-
-
-
-
-
-
-
-
+}	 // namespace SNIPPET_LIST_TESTS
 
 
 // END OF FILE

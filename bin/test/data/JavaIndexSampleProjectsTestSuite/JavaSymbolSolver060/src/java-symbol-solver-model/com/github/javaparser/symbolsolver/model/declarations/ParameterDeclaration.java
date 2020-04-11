@@ -22,31 +22,34 @@ package com.github.javaparser.symbolsolver.model.declarations;
  * @author Federico Tomassetti
  */
 public interface ParameterDeclaration extends ValueDeclaration {
+	@Override default boolean isParameter()
+	{
+		return true;
+	}
 
-    @Override
-    default boolean isParameter() {
-        return true;
-    }
+	@Override default ParameterDeclaration asParameter()
+	{
+		return this;
+	}
 
-    @Override
-    default ParameterDeclaration asParameter() {
-        return this;
-    }
+	/**
+	 * Is this parameter declared as variadic?
+	 */
+	boolean isVariadic();
 
-    /**
-     * Is this parameter declared as variadic?
-     */
-    boolean isVariadic();
-
-    /**
-     * Describe the type of the parameter. In practice add three dots to the type name
-     * is the parameter is variadic.
-     */
-    default String describeType() {
-        if (isVariadic()) {
-            return getType().asArrayType().getComponentType().describe() + "...";
-        } else {
-            return getType().describe();
-        }
-    }
+	/**
+	 * Describe the type of the parameter. In practice add three dots to the type name
+	 * is the parameter is variadic.
+	 */
+	default String describeType()
+	{
+		if (isVariadic())
+		{
+			return getType().asArrayType().getComponentType().describe() + "...";
+		}
+		else
+		{
+			return getType().describe();
+		}
+	}
 }

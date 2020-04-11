@@ -21,13 +21,14 @@ package com.github.javaparser.symbolsolver.model.declarations;
  *
  * @author Federico Tomassetti
  */
-public class MethodAmbiguityException extends RuntimeException {
-
-    /**
-     * Create an instance from a description of the reason why there is ambiguity in this particular case.
-     */
-    public MethodAmbiguityException(String description) {
-        super(description);
-    }
-
+public class MethodAmbiguityException extends RuntimeException
+{
+	/**
+	 * Create an instance from a description of the reason why there is ambiguity in this particular
+	 * case.
+	 */
+	public MethodAmbiguityException(String description)
+	{
+		super(description);
+	}
 }

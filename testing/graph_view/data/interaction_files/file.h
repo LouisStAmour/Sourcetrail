@@ -1,2 +1,4 @@
 
-class File {};
+class File
+{
+};

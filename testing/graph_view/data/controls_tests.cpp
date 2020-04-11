@@ -3,42 +3,41 @@
 
 namespace image_export
 {
-	struct Struct
-	{
-		static void foo() {};
-	};
+struct Struct
+{
+	static void foo() {};
+};
 
-	class Base
-	{
-		virtual void foo() = 0;
-	};
+class Base
+{
+	virtual void foo() = 0;
+};
 
-	class Center
-		: public Base
+class Center: public Base
+{
+public:
+	void foo()	  // <- ACTION: activate foo()
 	{
-	public:
-		void foo() // <- ACTION: activate foo()
-		{
-			Struct s;
-			Struct::foo();
-			member = 2;
-		}
-	protected:
-		int member;
-	};
-
-	class Derived
-		: public Center
-	{
-		void foo() {}
-	};
-
-	void bar()
-	{
-		Center c;
-		c.foo();
+		Struct s;
+		Struct::foo();
+		member = 2;
 	}
+
+protected:
+	int member;
+};
+
+class Derived: public Center
+{
+	void foo() {}
+};
+
+void bar()
+{
+	Center c;
+	c.foo();
 }
+}	 // namespace image_export
 
 
 // TEST: move - drag
@@ -50,7 +49,6 @@ namespace image_export
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: move - Ctrl + Arrows
 // START ----------------------------------------------------------------------
 
@@ -58,7 +56,6 @@ namespace image_export
 // RESULT: graph is moved
 
 // END ------------------------------------------------------------------------
-
 
 
 // TEST: zoom - buttons
@@ -70,7 +67,6 @@ namespace image_export
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: zoom - mouse wheel
 // START ----------------------------------------------------------------------
 
@@ -78,7 +74,6 @@ namespace image_export
 // RESULT: Zoom Level changes, percentage in lower left corner
 
 // END ------------------------------------------------------------------------
-
 
 
 // TEST: zoom - Shift + Ctrl + Up/Down
@@ -90,7 +85,6 @@ namespace image_export
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: zoom reset
 // START ----------------------------------------------------------------------
 
@@ -100,7 +94,6 @@ namespace image_export
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: image export
 // START ----------------------------------------------------------------------
 
@@ -108,7 +101,6 @@ namespace image_export
 // RESULT: compare to images in "results/controls_tests"
 
 // END ------------------------------------------------------------------------
-
 
 
 // TEST: legend

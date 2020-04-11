@@ -10,27 +10,30 @@ import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeS
 /**
  * @author Federico Tomassetti
  */
-public class MyObjectProvider implements ObjectProvider {
+public class MyObjectProvider implements ObjectProvider
+{
+	public static final MyObjectProvider INSTANCE = new MyObjectProvider();
 
-    public static final MyObjectProvider INSTANCE = new MyObjectProvider();
+	private MyObjectProvider()
+	{
+		// prevent instantiation
+	}
 
-    private MyObjectProvider() {
-        // prevent instantiation
-    }
+	@Override public ReferenceType object()
+	{
+		return new ReferenceTypeImpl(
+			new ReflectionClassDeclaration(Object.class, new ReflectionTypeSolver()),
+			new ReflectionTypeSolver());
+	}
 
-    @Override
-    public ReferenceType object() {
-        return new ReferenceTypeImpl(new ReflectionClassDeclaration(Object.class, new ReflectionTypeSolver()), new ReflectionTypeSolver());
-    }
-
-    @Override
-    public ReferenceType byName(String qualifiedName) {
-        TypeSolver typeSolver = new ReflectionTypeSolver();
-        ReferenceTypeDeclaration typeDeclaration = typeSolver.solveType(qualifiedName);
-        if (!typeDeclaration.getTypeParameters().isEmpty()) {
-            throw new UnsupportedOperationException();
-        }
-        return new ReferenceTypeImpl(typeDeclaration, typeSolver);
-    }
-
+	@Override public ReferenceType byName(String qualifiedName)
+	{
+		TypeSolver typeSolver = new ReflectionTypeSolver();
+		ReferenceTypeDeclaration typeDeclaration = typeSolver.solveType(qualifiedName);
+		if (!typeDeclaration.getTypeParameters().isEmpty())
+		{
+			throw new UnsupportedOperationException();
+		}
+		return new ReferenceTypeImpl(typeDeclaration, typeSolver);
+	}
 }

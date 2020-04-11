@@ -8,7 +8,7 @@
 // TEST: Move Focus between locations
 // START ----------------------------------------------------------------------
 
-int sum(int a, int b) // <- ACTION: focus location via hover
+int sum(int a, int b)	 // <- ACTION: focus location via hover
 {
 	return a + b;
 }
@@ -44,11 +44,10 @@ int div(int a, int b)
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: Activate location
 // START ----------------------------------------------------------------------
 
-int decimate(int a) // <- ACTION: move focus on 'decimate'
+int decimate(int a)	   // <- ACTION: move focus on 'decimate'
 {
 	return div(a, 10);
 }
@@ -59,18 +58,17 @@ int decimate(int a) // <- ACTION: move focus on 'decimate'
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: Activate local symbol
 // START ----------------------------------------------------------------------
 
 int pow(int a, int b)
 {
-	int r = 1; // <- ACTION 1: move focus on 'r'
+	int r = 1;	  // <- ACTION 1: move focus on 'r'
 	for (int i = 0; i < b; ++i)
 	{
 		r *= a;
 	}
-	return r; // <- ACTION 3: move focus on 'r'
+	return r;	 // <- ACTION 3: move focus on 'r'
 }
 
 // ACTION 2: Press Enter/E
@@ -82,13 +80,12 @@ int pow(int a, int b)
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: Navigate between active locations
 // START ----------------------------------------------------------------------
 
 int square(int a)
 {
-	return mult(a, a); // <- ACTION: activate 'mult'
+	return mult(a, a);	  // <- ACTION: activate 'mult'
 }
 
 // ACTION: Hold Shift and navigate with keyboard
@@ -102,9 +99,9 @@ int square(int a)
 
 int cube(int a)
 {
-	int r = square(a); // <- ACTION 1: activate 'square'
+	int r = square(a);	  // <- ACTION 1: activate 'square'
 	r = mult(r, a);
-	return r; // <- ACTION 2: activate 'r'
+	return r;	 // <- ACTION 2: activate 'r'
 }
 
 // ACTION: Hold Shift and navigate with keyboard
@@ -115,9 +112,7 @@ int cube(int a)
 // END ------------------------------------------------------------------------
 
 
-
 // NOTE: Snippet mode only
-
 
 
 // TEST: Expanding scopes
@@ -139,7 +134,7 @@ public:
 		m_value = 0;
 	}
 
-	void add(int a) // <- ACTION 1: activate 'add'
+	void add(int a)	   // <- ACTION 1: activate 'add'
 	{
 		m_value += a;
 	}
@@ -174,11 +169,10 @@ private:
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: Expand/Minimize snippets
 // START ----------------------------------------------------------------------
 
-int half(int a) // <- ACTION 2: activate 'int'
+int half(int a)	   // <- ACTION 2: activate 'int'
 {
 	return div(a, 2);
 }

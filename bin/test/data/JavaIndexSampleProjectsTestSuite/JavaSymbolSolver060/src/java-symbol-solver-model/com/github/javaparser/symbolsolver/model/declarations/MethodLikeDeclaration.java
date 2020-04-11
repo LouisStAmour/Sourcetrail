@@ -24,99 +24,115 @@ import java.util.Optional;
  * @author Federico Tomassetti
  */
 public interface MethodLikeDeclaration extends Declaration, TypeParametrizable, HasAccessLevel {
-    /**
-     * The package name of the declaring type.
-     */
-    default String getPackageName() {
-        return declaringType().getPackageName();
-    }
+	/**
+	 * The package name of the declaring type.
+	 */
+	default String getPackageName()
+	{
+		return declaringType().getPackageName();
+	}
 
-    /**
-     * The class(es) wrapping the declaring type.
-     */
-    default String getClassName() {
-        return declaringType().getClassName();
-    }
+	/**
+	 * The class(es) wrapping the declaring type.
+	 */
+	default String getClassName()
+	{
+		return declaringType().getClassName();
+	}
 
-    /**
-     * The qualified name of the method composed by the qualfied name of the declaring type
-     * followed by a dot and the name of the method.
-     */
-    default String getQualifiedName() {
-        return declaringType().getQualifiedName() + "." + this.getName();
-    }
+	/**
+	 * The qualified name of the method composed by the qualfied name of the declaring type
+	 * followed by a dot and the name of the method.
+	 */
+	default String getQualifiedName()
+	{
+		return declaringType().getQualifiedName() + "." + this.getName();
+	}
 
-    /**
-     * The signature of the method.
-     */
-    default String getSignature() {
-        StringBuffer sb = new StringBuffer();
-        sb.append(getName());
-        sb.append("(");
-        for (int i = 0; i < getNumberOfParams(); i++) {
-            if (i != 0) {
-                sb.append(", ");
-            }
-            sb.append(getParam(i).describeType());
-        }
-        sb.append(")");
-        return sb.toString();
-    }
+	/**
+	 * The signature of the method.
+	 */
+	default String getSignature()
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append(getName());
+		sb.append("(");
+		for (int i = 0; i < getNumberOfParams(); i++)
+		{
+			if (i != 0)
+			{
+				sb.append(", ");
+			}
+			sb.append(getParam(i).describeType());
+		}
+		sb.append(")");
+		return sb.toString();
+	}
 
-    /**
-     * The qualified signature of the method. It is composed by the qualified name of the declaring type
-     * followed by the signature of the method.
-     */
-    default String getQualifiedSignature() {
-        return declaringType().getId() + "." + this.getSignature();
-    }
+	/**
+	 * The qualified signature of the method. It is composed by the qualified name of the declaring
+	 * type followed by the signature of the method.
+	 */
+	default String getQualifiedSignature()
+	{
+		return declaringType().getId() + "." + this.getSignature();
+	}
 
-    /**
-     * The type in which the method is declared.
-     */
-    ReferenceTypeDeclaration declaringType();
+	/**
+	 * The type in which the method is declared.
+	 */
+	ReferenceTypeDeclaration declaringType();
 
-    /**
-     * Number of params.
-     */
-    int getNumberOfParams();
+	/**
+	 * Number of params.
+	 */
+	int getNumberOfParams();
 
-    /**
-     * Get the ParameterDeclaration at the corresponding position or throw IllegalArgumentException.
-     */
-    ParameterDeclaration getParam(int i);
+	/**
+	 * Get the ParameterDeclaration at the corresponding position or throw IllegalArgumentException.
+	 */
+	ParameterDeclaration getParam(int i);
 
-    /**
-     * Utility method to get the last ParameterDeclaration. It throws UnsupportedOperationException if the method
-     * has no parameters.
-     * The last parameter can be variadic and sometimes it needs to be handled in a special way.
-     */
-    default ParameterDeclaration getLastParam() {
-        if (getNumberOfParams() == 0) {
-            throw new UnsupportedOperationException("This method has no typeParametersValues, therefore it has no a last parameter");
-        }
-        return getParam(getNumberOfParams() - 1);
-    }
+	/**
+	 * Utility method to get the last ParameterDeclaration. It throws UnsupportedOperationException
+	 * if the method has no parameters. The last parameter can be variadic and sometimes it needs to
+	 * be handled in a special way.
+	 */
+	default ParameterDeclaration getLastParam()
+	{
+		if (getNumberOfParams() == 0)
+		{
+			throw new UnsupportedOperationException(
+				"This method has no typeParametersValues, therefore it has no a last parameter");
+		}
+		return getParam(getNumberOfParams() - 1);
+	}
 
-    /**
-     * Has the method or construcor a variadic parameter?
-     * Note that when a method has a variadic parameter it should have an array type.
-     */
-    default boolean hasVariadicParameter() {
-        if (getNumberOfParams() == 0) {
-            return false;
-        } else {
-            return getParam(getNumberOfParams() - 1).isVariadic();
-        }
-    }
+	/**
+	 * Has the method or construcor a variadic parameter?
+	 * Note that when a method has a variadic parameter it should have an array type.
+	 */
+	default boolean hasVariadicParameter()
+	{
+		if (getNumberOfParams() == 0)
+		{
+			return false;
+		}
+		else
+		{
+			return getParam(getNumberOfParams() - 1).isVariadic();
+		}
+	}
 
-    @Override
-    default Optional<TypeParameterDeclaration> findTypeParameter(String name) {
-        for (TypeParameterDeclaration tp : this.getTypeParameters()) {
-            if (tp.getName().equals(name)) {
-                return Optional.of(tp);
-            }
-        }
-        return declaringType().findTypeParameter(name);
-    }
+	@Override default Optional<TypeParameterDeclaration> findTypeParameter(String name)
+	{
+		for (TypeParameterDeclaration tp: this.getTypeParameters())
+		{
+			if (tp.getName().equals(name))
+			{
+				return Optional.of(tp);
+			}
+		}
+		return declaringType().findTypeParameter(name);
+	}
 }

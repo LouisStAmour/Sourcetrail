@@ -22,14 +22,13 @@ package com.github.javaparser.symbolsolver.model.declarations;
  * @author Federico Tomassetti
  */
 public interface EnumDeclaration extends ReferenceTypeDeclaration, HasAccessLevel {
+	@Override default boolean isEnum()
+	{
+		return true;
+	}
 
-    @Override
-    default boolean isEnum() {
-        return true;
-    }
-
-    @Override
-    default EnumDeclaration asEnum() {
-        return this;
-    }
+	@Override default EnumDeclaration asEnum()
+	{
+		return this;
+	}
 }

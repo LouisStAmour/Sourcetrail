@@ -14,7 +14,6 @@
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: overview bundles
 // START ----------------------------------------------------------------------
 
@@ -24,7 +23,6 @@
 // - Files, Macros, Namespaces, Classes, Structs, Unions, functions, global_variable, Typedefs, Enums
 
 // END ------------------------------------------------------------------------
-
 
 
 // TEST: overview bundle split
@@ -43,5 +41,7 @@
 // END ------------------------------------------------------------------------
 
 
-union A_Union_Type {};
+union A_Union_Type
+{
+};
 int global_variable;

@@ -2,7 +2,6 @@
 #define GRAPH_TUTORIAL_3_H
 
 
-
 #include "graph_tutorial_2.h"
 
 class ProducerOfTheLastMember
@@ -13,15 +12,15 @@ public:
 		ClassWithHiddenMembers::this_last_member.produce();
 	}
 
-//------------------------------------------------------------------------------
-//
-// 7 - ADVANCED TRAINING
-//  Now that we have covered all the basics of navigating code using the graph,
-//  I'd like to conclude this section of the tutorial by showing you a special
-//  feature. Activate "ClickMeLater" in the far right of the graph when you are 
-//  ready.
-//
-//------------------------------------------------------------------------------
+	//------------------------------------------------------------------------------
+	//
+	// 7 - ADVANCED TRAINING
+	//  Now that we have covered all the basics of navigating code using the graph,
+	//  I'd like to conclude this section of the tutorial by showing you a special
+	//  feature. Activate "ClickMeLater" in the far right of the graph when you are
+	//  ready.
+	//
+	//------------------------------------------------------------------------------
 
 private:
 	void the()
@@ -39,6 +38,4 @@ private:
 };
 
 
-
-#endif // GRAPH_TUTORIAL_3_H
-
+#endif	  // GRAPH_TUTORIAL_3_H

@@ -4,7 +4,8 @@
 #include "field.h"
 #include "player.h"
 
-class TicTacToe {
+class TicTacToe
+{
 public:
 	TicTacToe();
 	~TicTacToe();
@@ -14,10 +15,10 @@ public:
 
 private:
 	void Reset();
-	Player* SelectPlayer( Field::Token token, const char* name ) const;
+	Player* SelectPlayer(Field::Token token, const char* name) const;
 
 	Player* players_[2];
 	Field field_;
 };
 
-#endif // _TIC_TAC_TOE_
+#endif	  // _TIC_TAC_TOE_

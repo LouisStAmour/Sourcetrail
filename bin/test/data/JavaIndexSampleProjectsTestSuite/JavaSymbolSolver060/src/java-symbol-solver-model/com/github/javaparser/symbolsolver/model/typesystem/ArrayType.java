@@ -17,7 +17,6 @@
 package com.github.javaparser.symbolsolver.model.typesystem;
 
 import com.github.javaparser.symbolsolver.model.declarations.TypeParameterDeclaration;
-
 import java.util.Map;
 
 /**
@@ -25,84 +24,99 @@ import java.util.Map;
  *
  * @author Federico Tomassetti
  */
-public class ArrayType implements Type {
+public class ArrayType implements Type
+{
+	private Type baseType;
 
-    private Type baseType;
+	public ArrayType(Type baseType)
+	{
+		this.baseType = baseType;
+	}
 
-    public ArrayType(Type baseType) {
-        this.baseType = baseType;
-    }
+	///
+	/// Object methods
+	///
 
-    ///
-    /// Object methods
-    ///
+	@Override public boolean equals(Object o)
+	{
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+		ArrayType that = (ArrayType)o;
 
-        ArrayType that = (ArrayType) o;
+		if (!baseType.equals(that.baseType))
+			return false;
 
-        if (!baseType.equals(that.baseType)) return false;
+		return true;
+	}
 
-        return true;
-    }
+	@Override public int hashCode()
+	{
+		return baseType.hashCode();
+	}
 
-    @Override
-    public int hashCode() {
-        return baseType.hashCode();
-    }
+	@Override public String toString()
+	{
+		return "ArrayTypeUsage{" + baseType + "}";
+	}
 
-    @Override
-    public String toString() {
-        return "ArrayTypeUsage{" + baseType + "}";
-    }
+	///
+	/// Type methods
+	///
 
-    ///
-    /// Type methods
-    ///
+	@Override public ArrayType asArrayType()
+	{
+		return this;
+	}
 
-    @Override
-    public ArrayType asArrayType() {
-        return this;
-    }
+	@Override public boolean isArray()
+	{
+		return true;
+	}
 
-    @Override
-    public boolean isArray() {
-        return true;
-    }
+	@Override public String describe()
+	{
+		return baseType.describe() + "[]";
+	}
 
-    @Override
-    public String describe() {
-        return baseType.describe() + "[]";
-    }
+	public Type getComponentType()
+	{
+		return baseType;
+	}
 
-    public Type getComponentType() {
-        return baseType;
-    }
+	@Override public boolean isAssignableBy(Type other)
+	{
+		if (other.isArray())
+		{
+			if (baseType.isPrimitive() && other.asArrayType().getComponentType().isPrimitive())
+			{
+				return baseType.equals(other.asArrayType().getComponentType());
+			}
+			return baseType.isAssignableBy(other.asArrayType().getComponentType());
+		}
+		else if (other.isNull())
+		{
+			return true;
+		}
+		return false;
+	}
 
-    @Override
-    public boolean isAssignableBy(Type other) {
-        if (other.isArray()) {
-            if (baseType.isPrimitive() && other.asArrayType().getComponentType().isPrimitive()) {
-              return baseType.equals(other.asArrayType().getComponentType());
-            }
-            return baseType.isAssignableBy(other.asArrayType().getComponentType());
-        } else if (other.isNull()) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public Type replaceTypeVariables(TypeParameterDeclaration tpToReplace, Type replaced, Map<TypeParameterDeclaration, Type> inferredTypes) {
-        Type baseTypeReplaced = baseType.replaceTypeVariables(tpToReplace, replaced, inferredTypes);
-        if (baseTypeReplaced == baseType) {
-            return this;
-        } else {
-            return new ArrayType(baseTypeReplaced);
-        }
-    }
-
+	@Override
+	public Type replaceTypeVariables(
+		TypeParameterDeclaration tpToReplace,
+		Type replaced,
+		Map<TypeParameterDeclaration, Type> inferredTypes)
+	{
+		Type baseTypeReplaced = baseType.replaceTypeVariables(tpToReplace, replaced, inferredTypes);
+		if (baseTypeReplaced == baseType)
+		{
+			return this;
+		}
+		else
+		{
+			return new ArrayType(baseTypeReplaced);
+		}
+	}
 }

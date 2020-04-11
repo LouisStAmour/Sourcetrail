@@ -25,44 +25,51 @@ import com.github.javaparser.symbolsolver.model.declarations.ReferenceTypeDeclar
  * @author Federico Tomassetti
  */
 public interface TypeSolver {
+	/**
+	 * Get the root of the hierarchy of type solver.
+	 */
+	default TypeSolver getRoot()
+	{
+		if (getParent() == null)
+		{
+			return this;
+		}
+		else
+		{
+			return getParent().getRoot();
+		}
+	}
 
-    /**
-     * Get the root of the hierarchy of type solver.
-     */
-    default TypeSolver getRoot() {
-        if (getParent() == null) {
-            return this;
-        } else {
-            return getParent().getRoot();
-        }
-    }
+	/**
+	 * Parent of the this TypeSolver. This can return null.
+	 */
+	TypeSolver getParent();
 
-    /**
-     * Parent of the this TypeSolver. This can return null.
-     */
-    TypeSolver getParent();
+	/**
+	 * Set the parent of this TypeSolver.
+	 */
+	void setParent(TypeSolver parent);
 
-    /**
-     * Set the parent of this TypeSolver.
-     */
-    void setParent(TypeSolver parent);
+	/**
+	 * Try to solve the type with the given name. It always return a SymbolReference which can be
+	 * solved or unsolved.
+	 */
+	SymbolReference<ReferenceTypeDeclaration> tryToSolveType(String name);
 
-    /**
-     * Try to solve the type with the given name. It always return a SymbolReference which can be solved
-     * or unsolved.
-     */
-    SymbolReference<ReferenceTypeDeclaration> tryToSolveType(String name);
-
-    /**
-     * Solve the given type. Either the type is found and returned or an UnsolvedSymbolException is thrown.
-     */
-    default ReferenceTypeDeclaration solveType(String name) throws UnsolvedSymbolException {
-        SymbolReference<ReferenceTypeDeclaration> ref = tryToSolveType(name);
-        if (ref.isSolved()) {
-            return ref.getCorrespondingDeclaration();
-        } else {
-            throw new UnsolvedSymbolException(name, this);
-        }
-    }
-
+	/**
+	 * Solve the given type. Either the type is found and returned or an UnsolvedSymbolException is
+	 * thrown.
+	 */
+	default ReferenceTypeDeclaration solveType(String name) throws UnsolvedSymbolException
+	{
+		SymbolReference<ReferenceTypeDeclaration> ref = tryToSolveType(name);
+		if (ref.isSolved())
+		{
+			return ref.getCorrespondingDeclaration();
+		}
+		else
+		{
+			throw new UnsolvedSymbolException(name, this);
+		}
+	}
 }

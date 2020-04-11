@@ -21,7 +21,6 @@ import com.github.javaparser.symbolsolver.model.declarations.ReferenceTypeDeclar
 import com.github.javaparser.symbolsolver.model.declarations.TypeParameterDeclaration;
 import com.github.javaparser.symbolsolver.model.declarations.TypeParametrizable;
 import com.github.javaparser.symbolsolver.model.resolution.TypeSolver;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.Method;
@@ -34,97 +33,118 @@ import java.util.stream.Collectors;
 /**
  * @author Federico Tomassetti
  */
-public class ReflectionTypeParameter implements TypeParameterDeclaration {
+public class ReflectionTypeParameter implements TypeParameterDeclaration
+{
+	private TypeVariable typeVariable;
+	private TypeSolver typeSolver;
+	private TypeParametrizable container;
 
-    private TypeVariable typeVariable;
-    private TypeSolver typeSolver;
-    private TypeParametrizable container;
+	public ReflectionTypeParameter(
+		TypeVariable typeVariable, boolean declaredOnClass, TypeSolver typeSolver)
+	{
+		GenericDeclaration genericDeclaration = typeVariable.getGenericDeclaration();
+		if (genericDeclaration instanceof Class)
+		{
+			container = ReflectionFactory.typeDeclarationFor((Class)genericDeclaration, typeSolver);
+		}
+		else if (genericDeclaration instanceof Method)
+		{
+			container = new ReflectionMethodDeclaration((Method)genericDeclaration, typeSolver);
+		}
+		else if (genericDeclaration instanceof Constructor)
+		{
+			container = new ReflectionConstructorDeclaration(
+				(Constructor)genericDeclaration, typeSolver);
+		}
+		this.typeVariable = typeVariable;
+		this.typeSolver = typeSolver;
+	}
 
-    public ReflectionTypeParameter(TypeVariable typeVariable, boolean declaredOnClass, TypeSolver typeSolver) {
-        GenericDeclaration genericDeclaration = typeVariable.getGenericDeclaration();
-        if (genericDeclaration instanceof Class) {
-            container = ReflectionFactory.typeDeclarationFor((Class) genericDeclaration, typeSolver);
-        } else if (genericDeclaration instanceof Method) {
-            container = new ReflectionMethodDeclaration((Method) genericDeclaration, typeSolver);
-        } else if (genericDeclaration instanceof Constructor) {
-            container = new ReflectionConstructorDeclaration((Constructor) genericDeclaration, typeSolver);
-        }
-        this.typeVariable = typeVariable;
-        this.typeSolver = typeSolver;
-    }
+	@Override public boolean equals(Object o)
+	{
+		if (this == o)
+			return true;
+		if (!(o instanceof TypeParameterDeclaration))
+			return false;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof TypeParameterDeclaration)) return false;
+		TypeParameterDeclaration that = (TypeParameterDeclaration)o;
 
-        TypeParameterDeclaration that = (TypeParameterDeclaration) o;
+		if (!getQualifiedName().equals(that.getQualifiedName()))
+		{
+			return false;
+		}
+		if (declaredOnType() != that.declaredOnType())
+		{
+			return false;
+		}
+		if (declaredOnMethod() != that.declaredOnMethod())
+		{
+			return false;
+		}
+		// TODO check bounds
+		return true;
+	}
 
-        if (!getQualifiedName().equals(that.getQualifiedName())) {
-            return false;
-        }
-        if (declaredOnType() != that.declaredOnType()) {
-            return false;
-        }
-        if (declaredOnMethod() != that.declaredOnMethod()) {
-            return false;
-        }
-        // TODO check bounds
-        return true;
-    }
+	@Override public int hashCode()
+	{
+		int result = typeVariable.hashCode();
+		result = 31 * result + container.hashCode();
+		return result;
+	}
 
-    @Override
-    public int hashCode() {
-        int result = typeVariable.hashCode();
-        result = 31 * result + container.hashCode();
-        return result;
-    }
+	@Override public String getName()
+	{
+		return typeVariable.getName();
+	}
 
-    @Override
-    public String getName() {
-        return typeVariable.getName();
-    }
+	@Override public String getContainerQualifiedName()
+	{
+		if (container instanceof ReferenceTypeDeclaration)
+		{
+			return ((ReferenceTypeDeclaration)container).getQualifiedName();
+		}
+		else
+		{
+			return ((MethodLikeDeclaration)container).getQualifiedSignature();
+		}
+	}
 
-    @Override
-    public String getContainerQualifiedName() {
-        if (container instanceof ReferenceTypeDeclaration) {
-            return ((ReferenceTypeDeclaration) container).getQualifiedName();
-        } else {
-            return ((MethodLikeDeclaration) container).getQualifiedSignature();
-        }
-    }
+	@Override public String getContainerId()
+	{
+		if (container instanceof ReferenceTypeDeclaration)
+		{
+			return ((ReferenceTypeDeclaration)container).getId();
+		}
+		else
+		{
+			return ((MethodLikeDeclaration)container).getQualifiedSignature();
+		}
+	}
 
-    @Override
-    public String getContainerId() {
-        if (container instanceof ReferenceTypeDeclaration) {
-            return ((ReferenceTypeDeclaration) container).getId();
-        } else {
-            return ((MethodLikeDeclaration) container).getQualifiedSignature();
-        }
-    }
-    
-    @Override
-    public TypeParametrizable getContainer() {
-        return this.container;
-    }
+	@Override public TypeParametrizable getContainer()
+	{
+		return this.container;
+	}
 
-    @Override
-    public List<Bound> getBounds(TypeSolver typeSolver) {
-        return Arrays.stream(typeVariable.getBounds()).map((refB) -> Bound.extendsBound(ReflectionFactory.typeUsageFor(refB, typeSolver))).collect(Collectors.toList());
-    }
+	@Override public List<Bound> getBounds(TypeSolver typeSolver)
+	{
+		return Arrays.stream(typeVariable.getBounds())
+			.map((refB) -> Bound.extendsBound(ReflectionFactory.typeUsageFor(refB, typeSolver)))
+			.collect(Collectors.toList());
+	}
 
-    @Override
-    public String toString() {
-        return "ReflectionTypeParameter{" +
-                "typeVariable=" + typeVariable +
-                '}';
-    }
+	@Override public String toString()
+	{
+		return "ReflectionTypeParameter{"
+			+ "typeVariable=" + typeVariable + '}';
+	}
 
-    @Override
-    public Optional<ReferenceTypeDeclaration> containerType() {
-        if (container instanceof ReferenceTypeDeclaration) {
-            return Optional.of((ReferenceTypeDeclaration) container);
-        }
-        return Optional.empty();
-    }
+	@Override public Optional<ReferenceTypeDeclaration> containerType()
+	{
+		if (container instanceof ReferenceTypeDeclaration)
+		{
+			return Optional.of((ReferenceTypeDeclaration)container);
+		}
+		return Optional.empty();
+	}
 }

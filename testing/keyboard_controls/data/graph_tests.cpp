@@ -14,14 +14,14 @@ class A
 	int b;
 };
 
-class B : public A // <- ACTION: Activate B
+class B: public A	 // <- ACTION: Activate B
 {
 	X* x;
 	Y* y;
 	Z* z;
 };
 
-class C : public B
+class C: public B
 {
 	int e;
 };
@@ -51,7 +51,6 @@ class D
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: Move Focus between edges
 // START ----------------------------------------------------------------------
 
@@ -69,7 +68,6 @@ class D
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: Moving focus beyond viewport centers focus
 // START ----------------------------------------------------------------------
 
@@ -79,7 +77,6 @@ class D
 // RESULT: View is panned when focused node is outside of the viewport
 
 // END ------------------------------------------------------------------------
-
 
 
 // TEST: Expand/collapse nodes
@@ -98,7 +95,6 @@ class D
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: Activate node
 // START ----------------------------------------------------------------------
 
@@ -107,7 +103,6 @@ class D
 // RESULT: 'D' is activated
 
 // END ------------------------------------------------------------------------
-
 
 
 // TEST: Activate node in new Tab
@@ -120,18 +115,16 @@ class D
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: Activate edge
 // START ----------------------------------------------------------------------
 
-B b; // <- ACTION: activate 'B'
+B b;	// <- ACTION: activate 'B'
 
 // ACTION: Move focus on type use 'b -> B'
 // ACTION: Press Enter/E
 // RESULT: edge is activated
 
 // END ------------------------------------------------------------------------
-
 
 
 // TEST: Activate aggregation edge
@@ -142,7 +135,6 @@ B b; // <- ACTION: activate 'B'
 // RESULT: aggregation edge is activated
 
 // END ------------------------------------------------------------------------
-
 
 
 // TEST: Expand bundle node

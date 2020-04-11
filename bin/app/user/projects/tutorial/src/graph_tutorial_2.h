@@ -2,7 +2,6 @@
 #define GRAPH_TUTORIAL_2_H
 
 
-
 #include "graph_tutorial_1.h"
 #include "graph_tutorial_5.h"
 
@@ -21,8 +20,8 @@
 //  In order not to flood you with information the graph is hiding a lot of
 //  elements. Do you see the "ClassWithHiddenMembers" for example? It actually
 //  contains more members than you currently see. Members that are not important
-//  for the current context are hidden. Nevertheless you can reveal them by 
-//  clicking the arrow next the the class name. Try that now and read those 
+//  for the current context are hidden. Nevertheless you can reveal them by
+//  clicking the arrow next the the class name. Try that now and read those
 //  members' names.
 //
 //------------------------------------------------------------------------------
@@ -35,35 +34,27 @@ public:
 		GraphTutorial::where_am_i_called();
 	}
 
-	void now_you_see_all_contents_of_this_class()
-	{
-	}
+	void now_you_see_all_contents_of_this_class() {}
 
-	void sourcetrail_uses_different_colors()
-	{
-	}
+	void sourcetrail_uses_different_colors() {}
 
-	void to_distinguish_between_functions()
-	{
-	}
+	void to_distinguish_between_functions() {}
 
 	int and_variables;
 
 	int to_continue_click;
 
-//------------------------------------------------------------------------------
-//
-// 5 - RELATIONS
-//  As you see in the graph, this member is accessed at quite some places
-//  throughout the code base. Lets say you wonder what code causes the edge
-//  between "reading" and "this_last_member" to appear. What will happen if you
-//  click the edge?
-//
-//------------------------------------------------------------------------------
+	//------------------------------------------------------------------------------
+	//
+	// 5 - RELATIONS
+	//  As you see in the graph, this member is accessed at quite some places
+	//  throughout the code base. Lets say you wonder what code causes the edge
+	//  between "reading" and "this_last_member" to appear. What will happen if you
+	//  click the edge?
+	//
+	//------------------------------------------------------------------------------
 	static ClickMeLater this_last_member;
 };
 
 
-
-#endif // GRAPH_TUTORIAL_2_H
-
+#endif	  // GRAPH_TUTORIAL_2_H

@@ -1,7 +1,6 @@
 
 namespace AUTOCOMPLETION_TESTS
 {
-
 // TEST: Find Shortcut
 // START ----------------------------------------------------------------------
 
@@ -14,7 +13,6 @@ namespace AUTOCOMPLETION_TESTS
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: Find Symbol
 // START ----------------------------------------------------------------------
 
@@ -22,7 +20,6 @@ namespace AUTOCOMPLETION_TESTS
 // RESULT: main is activated
 
 // END ------------------------------------------------------------------------
-
 
 
 // TEST: Find Symbol with button - BROKEN
@@ -34,7 +31,6 @@ namespace AUTOCOMPLETION_TESTS
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: Choose symbol from list - keyboard
 // START ----------------------------------------------------------------------
 
@@ -42,7 +38,6 @@ namespace AUTOCOMPLETION_TESTS
 // RESULT: 'main.cpp' is activated
 
 // END ------------------------------------------------------------------------
-
 
 
 // TEST: Choose symbol from list - mouse
@@ -54,7 +49,6 @@ namespace AUTOCOMPLETION_TESTS
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: Fuzzy matching
 // START ----------------------------------------------------------------------
 
@@ -62,7 +56,6 @@ namespace AUTOCOMPLETION_TESTS
 // RESULT: top result is class 'TicTacToe'
 
 // END ------------------------------------------------------------------------
-
 
 
 // TEST: Tab completion to find symbols
@@ -76,7 +69,6 @@ namespace AUTOCOMPLETION_TESTS
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: Namespace as subtext
 // START ----------------------------------------------------------------------
 
@@ -86,7 +78,6 @@ namespace AUTOCOMPLETION_TESTS
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: Directory as subtext
 // START ----------------------------------------------------------------------
 
@@ -94,7 +85,6 @@ namespace AUTOCOMPLETION_TESTS
 // RESULT: top result is 'tictactoe.h', directory in subtext
 
 // END ------------------------------------------------------------------------
-
 
 
 // TEST: No implicit template specializations in autocompletions
@@ -109,7 +99,6 @@ namespace AUTOCOMPLETION_TESTS
 // END ------------------------------------------------------------------------
 
 
-
 // TEST: Undefined templates shortened with '<..>'
 // START ----------------------------------------------------------------------
 
@@ -121,4 +110,4 @@ namespace AUTOCOMPLETION_TESTS
 
 // END ------------------------------------------------------------------------
 
-}
+}	 // namespace AUTOCOMPLETION_TESTS

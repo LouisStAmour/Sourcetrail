@@ -2,7 +2,6 @@
 #define GRAPH_TUTORIAL_5_H
 
 
-
 #include "graph_tutorial_6.h"
 
 //------------------------------------------------------------------------------
@@ -14,24 +13,34 @@
 //  relation while planning to modify the source code. But sometimes that is not
 //  enough.
 //  Sometimes you are interested in a whole call graph for a certain function or
-//  you want to see the complete inheritance chain of a specific class and you 
+//  you want to see the complete inheritance chain of a specific class and you
 //  want to expand the scope shown by the graph.
-//  Do you see the small icon on the upper left of the graph? Use it to show the 
+//  Do you see the small icon on the upper left of the graph? Use it to show the
 //  depth graph controls and click the "show base hierarchy" button.
 //
 //------------------------------------------------------------------------------
 
-class ClickMeLater: public JustMoveOn, public NothingToSeeHere
+class ClickMeLater
+	: public JustMoveOn
+	, public NothingToSeeHere
 {
 public:
-	void produce() { value++; }
-	
-	void consume() { value--; }
-	
-	bool isPositive() { return value > 0; }
-	
+	void produce()
+	{
+		value++;
+	}
+
+	void consume()
+	{
+		value--;
+	}
+
+	bool isPositive()
+	{
+		return value > 0;
+	}
+
 	int value;
 };
 
-#endif // GRAPH_TUTORIAL_5_H
-
+#endif	  // GRAPH_TUTORIAL_5_H

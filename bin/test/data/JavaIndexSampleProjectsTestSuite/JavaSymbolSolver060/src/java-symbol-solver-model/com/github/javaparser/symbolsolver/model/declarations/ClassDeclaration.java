@@ -17,7 +17,6 @@
 package com.github.javaparser.symbolsolver.model.declarations;
 
 import com.github.javaparser.symbolsolver.model.typesystem.ReferenceType;
-
 import java.util.List;
 
 /**
@@ -25,55 +24,53 @@ import java.util.List;
  *
  * @author Federico Tomassetti
  */
-public interface ClassDeclaration extends ReferenceTypeDeclaration, TypeParametrizable, HasAccessLevel {
+public interface ClassDeclaration
+	extends ReferenceTypeDeclaration, TypeParametrizable, HasAccessLevel {
+	/**
+	 * This method should always return true.
+	 */
+	@Override default boolean isClass()
+	{
+		return true;
+	}
 
-    /**
-     * This method should always return true.
-     */
-    @Override
-    default boolean isClass() {
-        return true;
-    }
+	/**
+	 * This is a ReferenceTypeUsage because it could contain type typeParametersValues.
+	 * For example: class A extends B<Integer, String>.
+	 * <p>
+	 * Note that only the Object class should not have a superclass and therefore
+	 * return null.
+	 */
+	ReferenceType getSuperClass();
 
-    /**
-     * This is a ReferenceTypeUsage because it could contain type typeParametersValues.
-     * For example: class A extends B<Integer, String>.
-     * <p>
-     * Note that only the Object class should not have a superclass and therefore
-     * return null.
-     */
-    ReferenceType getSuperClass();
+	/**
+	 * Return all the interfaces implemented directly by this class.
+	 * It does not include the interfaces implemented by superclasses or extended
+	 * by the interfaces implemented.
+	 */
+	List<ReferenceType> getInterfaces();
 
-    /**
-     * Return all the interfaces implemented directly by this class.
-     * It does not include the interfaces implemented by superclasses or extended
-     * by the interfaces implemented.
-     */
-    List<ReferenceType> getInterfaces();
+	/**
+	 * Get all superclasses, with all the type typeParametersValues expressed as functions of the
+	 * type typeParametersValues of this declaration.
+	 */
+	List<ReferenceType> getAllSuperClasses();
 
-    /**
-     * Get all superclasses, with all the type typeParametersValues expressed as functions of the type
-     * typeParametersValues of this declaration.
-     */
-    List<ReferenceType> getAllSuperClasses();
+	/**
+	 * Return all the interfaces implemented by this class, either directly or indirectly, including
+	 * the interfaces extended by interfaces it implements. <p> Get all interfaces, with all the
+	 * type typeParametersValues expressed as functions of the type typeParametersValues of this
+	 * declaration.
+	 */
+	List<ReferenceType> getAllInterfaces();
 
-    /**
-     * Return all the interfaces implemented by this class, either directly or indirectly, including the interfaces
-     * extended by interfaces it implements.
-     * <p>
-     * Get all interfaces, with all the type typeParametersValues expressed as functions of the type
-     * typeParametersValues of this declaration.
-     */
-    List<ReferenceType> getAllInterfaces();
+	///
+	/// Constructors
+	///
 
-    ///
-    /// Constructors
-    ///
-
-    /**
-     * List of constructors available for the class.
-     * This list should also include the default constructor.
-     */
-    List<ConstructorDeclaration> getConstructors();
-
+	/**
+	 * List of constructors available for the class.
+	 * This list should also include the default constructor.
+	 */
+	List<ConstructorDeclaration> getConstructors();
 }
