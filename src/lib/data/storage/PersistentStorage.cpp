@@ -1625,7 +1625,7 @@ std::shared_ptr<SourceLocationCollection> PersistentStorage::getSourceLocationsF
 
 	std::shared_ptr<SourceLocationCollection> collection =
 		std::make_shared<SourceLocationCollection>();
-	for (const std::pair<Id, FilePath>& p: filePaths)
+	for (auto p: filePaths)
 	{
 		collection->addSourceLocationFile(std::make_shared<SourceLocationFile>(
 			p.second, getFileNodeLanguage(p.first), true, false, false));
@@ -3019,7 +3019,7 @@ void PersistentStorage::addAggregationEdgesToGraph(
 	const Id nodeParentNodeId = m_hierarchyCache.getLastVisibleParentNodeId(nodeId);
 
 	std::map<Id, std::vector<EdgeInfo>> connectedParentNodeIds;
-	for (const std::pair<Id, std::vector<EdgeInfo>>& p: connectedNodeIds)
+	for (auto p: connectedNodeIds)
 	{
 		const Id parentNodeId = m_hierarchyCache.getLastVisibleParentNodeId(p.first);
 
@@ -3031,7 +3031,7 @@ void PersistentStorage::addAggregationEdgesToGraph(
 
 	// add hierarchies of these parents
 	std::vector<Id> nodeIdsToAdd;
-	for (const std::pair<Id, std::vector<EdgeInfo>>& p: connectedParentNodeIds)
+	for (auto p: connectedParentNodeIds)
 	{
 		const Id aggregationTargetNodeId = p.first;
 		if (!graph->getNodeById(aggregationTargetNodeId))
@@ -3043,7 +3043,7 @@ void PersistentStorage::addAggregationEdgesToGraph(
 
 	// create aggregation edges between parents and active node
 	Node* sourceNode = graph->getNodeById(nodeId);
-	for (const std::pair<Id, std::vector<EdgeInfo>>& p: connectedParentNodeIds)
+	for (auto p: connectedParentNodeIds)
 	{
 		const Id aggregationTargetNodeId = p.first;
 
